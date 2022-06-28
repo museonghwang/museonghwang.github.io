@@ -3,13 +3,12 @@
   color: $white;
 }
 
-html,
-body {
+html,body {
   overflow-x: hidden;
 }
 
 html {
-  font-family: $font-serif;
+  font-family: $font-sans;
   text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -18,11 +17,18 @@ html {
   text-rendering:optimizelegibility;
 }
 
+
 h1, h2, h3, h4, h5, h6 {
   font-family: $font-sans;
   font-weight: 400;
   color: $title-color;
   letter-spacing: -.025rem;
+}
+
+.modal-dialog{
+    width: 94%;
+    max-width: 700px;
+    height: 70%;
 }
 
 code {

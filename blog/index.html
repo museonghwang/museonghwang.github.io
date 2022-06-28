@@ -19,9 +19,9 @@ title: Blog
     {% endfor %}
     {% endif %}
 
-    <article>
+    <h4 style="font-weight: 400; line-height: 1.8;"><article>
       {{ post.excerpt | markdownify }}
-    <article>
+    <article></h4>
     <div class="post-more">
       {% if site.disqus_short_name %}
       <a href="{{ site.baseurl }}{{ post.url }}#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
