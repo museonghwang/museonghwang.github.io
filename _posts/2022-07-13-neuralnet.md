@@ -1,5 +1,5 @@
 ---
-1layout: post
+layout: post
 title: 신경망(Neural Network)과 활성화 함수(Activation Function)의 등장
 category: Deep Learning
 tag: Deep-Learning
