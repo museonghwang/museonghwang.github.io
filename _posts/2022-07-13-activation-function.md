@@ -48,4 +48,43 @@ $$
 
 딥러닝에서는 일반적으로 비선형 활성화 함수를 사용한다고 합니다. 그럼 선형 활성화 함수는 왜 딥러닝에서 사용되지 않는 걸까요? 이를 알아보기 위해 먼저 선형(Linear)에 대해 알아보겠습니다.
 
-## Linear
+## 선형(Linear)
+
+선형 변환이란 '선형'이라는 규칙을 지키며 $V$, 공간상의 벡터를 $W$ 공간상의 벡터로 바꿔주는 역할을 합니다.
+
+
+<p align="center"><img src="https://user-images.githubusercontent.com/77891754/178720377-4ef885f7-9241-4b38-8ad3-b17b113c8b29.png" alt="activation f" style="zoom:80%;" /></p>
+
+
+그럼 자세하게 들어가서 먼저 선형 변환(linear transformation)이 어떤 것인지 정의하고 가겠습니다.
+
+### 선형 변환 정의**
+
+> $**V$와 $W$가 어떤 $(1)$벡터 공간이고 둘 모두 $(2)$실수 집합 $(3)$상에 있다고 가정하겠습니다. 이때 함수 $(4) \mathcal{T}: V \rightarrow W$가 다음 두 조건을 만족할 때,**
+> 
+> 
+> 
+> **가산성(Additivity) : 모든 $x, y \in V$에 대해,  $\mathcal{T}(x+y) = \mathcal{T}(x)+ \mathcal{T}(y)$**
+> 
+> **동차성(Homogeneity) : 모든 $x \in V, c \in \Bbb{R}$에 대해, $\mathcal{T}(cx) = c\mathcal{T}(x)$**
+> 
+> **우리는 함수 $\mathcal{T}$를 선형 변환(linear transformation)이라고 부릅니다.**
+> 
+> $**(1)$ : 간단하게 말해서 벡터를 그릴 수 있는 공간입니다. 영상에서의 좌표 평면이라고 생각하시면 됩니다.**
+> 
+> $**(2)$ : 정확히 표현하면 같은 체(field)에 속해 있다고 해야 하나, 이 글에선 실수만 다루기 때문에 실수 집합 상에 있다고 표현했습니다. 체의 예로는 실수 집합 $\Bbb{R}$, 유리수 집합 $\Bbb{Q}$, 복소수 집합 $\Bbb{C}$등이 있습니다.**
+> 
+> $**(3)$ : 실수 집합 상에 있다는 말은 $V$를 이루는 원소들이 실수라는 의미입니다. 예를 들어 실수 집합 상의 $V$가 어떤 벡터들의 집합이라고 했을 때, 그 벡터는 실수 벡터(벡터의 각 원소가 실수)가 됩니다.**
+> 
+> $**(4)$: 정의역(domain)이 $V$이고 공역(codomain)이 $W$인 함수 $\mathcal{T}$라는 의미입니다.**
+>
+
+
+
+
+
+
+
+
+
+<p align="center"><img src="https://user-images.githubusercontent.com/77891754/178720580-8fc58f96-918d-4df5-92ae-6cb68a0220f1.png" alt="activation f" style="zoom:80%;" /></p>
