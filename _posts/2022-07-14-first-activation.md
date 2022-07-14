@@ -3,6 +3,7 @@ layout: post
 title: 활성화 함수(Activation)와 비선형 함수(Non-linear function)
 category: Deep Learning
 tag: Deep-Learning
+date: 2022-07-14
 ---
 
 
@@ -219,45 +220,132 @@ $$
 
 ## 선형 변환의 합성함수에 관한 정리
 
----
+$V, W$ 그리고 $Z$ 가 실수 공간상의 벡터 공간이고, 함수 $\mathcal{T} : V \rightarrow W$ 와 함수 $\mathcal{U} : W \rightarrow Z$ 가 선형이라고 하면, 합성함수 $\mathcal{UT} : V \rightarrow Z$ 도 선형입니다.
 
-$**V, W$그리고 $Z$가 실수 공간상의 벡터 공간이고, 함수 $\mathcal{T} : V \rightarrow W$와 함수 $\mathcal{U} : W \rightarrow Z$가 선형이라고 하면, 합성함수   $\mathcal{UT} : V \rightarrow Z$도 선형입니다**
 
-**증명)**
-
-$**x, y \in V$이고 $a \in \Bbb{R}$이라고 하겠습니다. 그럼,**
+$x, y \in V$이고 $a \in \Bbb{R}$이라고 하겠습니다. 그럼,
 
 $$
 \begin{aligned} \mathcal{UT}(ax+y) & = \mathcal{U}(\mathcal{T}(ax+y)) \\ & = \mathcal{U}(a\mathcal{T}(x)+\mathcal{T}(y)) \\ & = a\mathcal{U}(\mathcal{T}(x)) + \mathcal{U}(\mathcal{T}(y)) \\ & = a\mathcal{U}\mathcal{T}(x) + \mathcal{U}\mathcal{T}(y) \end{aligned}
 $$
 
-**이므로, 선형의 성질에 의해 $\mathcal{UT}$도 선형입니다.**
+이므로, 선형의 성질에 의해 $\mathcal{UT}$도 선형입니다. 우리는 이제 선형함수의 합성함수 또한 선형이라는 것을 알았습니다. 이 정리에 의해 우리는 이제 $f(f(f(W x)))$를 $f^\star(W x)$ 로 표현할 수 있습니다.
 
-**우리는 이제 선형함수의 합성함수 또한 선형이라는 것을 알았습니다. 이 정리에 의해 우리는 이제 $f(f(f(W x)))$를 $f^\star(W x)$로 표현할 수 있습니다.**
+이것의 의미는 무엇일까요? 바로 3개의 노드를 1개로 줄여서 표현을 해도 결과가 달라지지 않는다는 것입니다.
 
-**이것의 의미는 무엇일까요?**
 
-**바로 3개의 노드를 1개로 줄여서 표현을 해도 결과가 달라지지 않는다는 것입니다.**
-
+<p align="center"><img src="https://user-images.githubusercontent.com/77891754/178853033-347f3752-a459-473d-96d9-1c31db1d8b7f.png" alt="activation f" style="zoom:100%;" /></p>
 
 
 
+결론적으로, **선형 활성화 함수를 사용**한다면, 노드의 개수를 아무리 많이 붙여도 **결국 하나의 노드를 사용하는 것과 차이가 없습니다.** 그럼 위에서 노드 3개를 사용한 모델은 결국 다음과 같이 단순한 식으로 표현이 됩니다.
+
+>
+> $$
+> y=model(x)=f(wx)=awx
+> $$
+> 
+> 여기서, 활성화 함수 $f$는 일반적인 선형 함수 $f(x) = ax$라고 하겠습니다. ($a$는 어떤 실수입니다.)
+> 
+> 위 식으로부터 알 수 있듯이, 이러한 모델은 선형적 특성을 띠는 데이터만 예측할 수 있고, 비선형적 특성을 띠는 데이터는 예측할 수 없습니다. 이러한 모델로 비선형 특성을 띠는 데이터를 예측하라는 것은 $ax$에서 $a$값을 바꾸어 $x^2$을 만들라는 것과 다름없죠.
+> 
+
+다시 말해, **선형 활성화 함수를 사용한다면, 모델의 표현력이 떨어지게 됩니다.** 자, 그럼 단일 노드가 아닌 layer들로 구성되어 있는 모델에서도 위와 같을까요?
+
+지금부터는 Layer들을 쌓아도 **활성화 함수가 선형이라면 모델의 표현력은 증가하지 않는다**는 것을 증명해 보겠습니다. 아래 그림은 input layer가 각각 1개, hidden layer는 2개(왼쪽 그림) or 1개(오른쪽)로 구성된 임의의 모델입니다. 빨간색으로 표현된 부분은 활성화 함수이며, 두 모델 모두 **선형 활성화 함수**라고 보겠습니다.
 
 
-<p align="center"><img src="https://user-images.githubusercontent.com/77891754/178853033-347f3752-a459-473d-96d9-1c31db1d8b7f.png" alt="activation f" style="zoom:80%;" /></p>
+
+<p align="center"><img src="https://user-images.githubusercontent.com/77891754/178854488-a62bb071-880c-4ef3-980f-00156c77cfcc.png" alt="activation f" style="zoom:80%;" /></p>
+
+
+먼저, 각 노드와 연결된 weight와 노드에서 연산된 값(=activation value)을 다음과 같이 표현하겠습니다.
+
+
+<p align="center"><img src="https://user-images.githubusercontent.com/77891754/178854505-8e77c23d-fd85-4191-a7e6-f89ca4399001.png" alt="activation f" style="zoom:80%;" /></p>
+
+
+위와 같이 하나의 weight에는 양옆에 있는 layer와 연결이 되어있으므로, 3개의 index가 필요합니다.
+
+$$
+w_n^{l,m}
+$$
+
+$l : layer\ index,\\ m:l번째\ layer의 \ node\ index,\\ n:(l−1)번째 layer의 node\ index$
+
+
+그리고, 노드에서 연산된 activation값은 2개의 index가 필요합니다.
+
+$$
+a_j^l\ or\ a_j^{l-1}
+$$
+
+$l : layer\ index,\\ j:k번째\ layer의\ node\ index(그림에선\ m\ or\ n)$
+
+
+그러면 지금부터 모델에서 임의의 노드를 선택하여 연산을 비교해 보겠습니다. 먼저, 왼쪽 모델에서 수행되는 연산은 다음과 같습니다.
+
+$$
+2번째\ layer의\ 3번째\ node 값 : a_3^2=f(\Sigma_ix_iw_i^{2,3}) - (1)
+$$
+
+$$
+3번째\ layer의\ 1번째\ node 값 : a_1^3=f(\Sigma_ja_j^2w_j^{3,1}) - (2)
+$$
+
+(2)번 식의 $a_j^2$의 의미는 무엇인가요?? 네, 2번째 layer의 $j$번째 node의 연산값입니다. 이제 $a_j^2$를 (1)번 식을 이용하면 다음과 같이 (2)식을 표현할 수 있습니다.
+
+$$
+a_1^3=f(\Sigma_ja_j^2w_j^{3,1}) - (2)
+$$
+
+에
+
+$$
+a_j^2=f(\Sigma_ix_iw_i^{2,j})
+$$
+
+를 대입하면 다음과 같고,
+
+$$
+a_1^3=f(\Sigma_jf(\Sigma_ix_iw_i^{2,j})w_j^{3,1}) - (3)
+$$
+
+여기서, 이전에 다루었던 **"선형 함수의 성질을 이용"**하면 (3)식은 다음과 같이 정리됩니다.
+
+$$
+a_1^3=f(f(x_1))(\Sigma_jw_1^{2,j}w_j^{3,1})+f(f(x_2))(\Sigma_jw_2^{2,j}w_j^{3,1})+... - (3)
+$$
+
+너무 조그마한 notation이 많아 어지러우신가요? 조금만 참아주세요, 오른쪽 모델은 1줄이면 끝납니다! 오른쪽은 1개의 hidden layer이므로 다음과 같이 표현됩니다.
+
+$$
+\begin{aligned} a_2^2&=f(\Sigma_ix_iw_I^{2,3}) \\ &=f(x_1)w_1^{2,2}+f(x_2)w_2^{2,2}+...-(4) \end{aligned}
+$$
+
+식 (3)과 (4)의 **공통점**이 있다면 무엇이 있을까요?? 바로 input data의 각 $x_1,x_2,x_3,..$ 에 대해 **항들이 독립적으로 분리** 가 되었음을 알 수 있습니다. 식 (3)과 (4)에서 $x_1$ 이 들어간 항을 볼까요?
+
+(3)에 있는 $f(f(x_1))$는 선형함수를 2번 거친 것이므로 결국 선형 함수이겠죠? 따라서 식 (4)의 $f(x_1)$처럼 선형함수를 1번만 통과한 것으로도 표현이 가능합니다.
+
+한편, 식 (3)의 $f(f(x_1))$과 곱해진 $\Sigma_jw_1^{2,j}w_j^{3,1}$부분은 여러 weight들의 덧셈과 합으로 이루어졌습니다. 그럼 결국 실수 하나가 나오겠네요? 그렇다면 식 (4)의 $f(x_1)$과 곱해진 $w_1^{2,2}$하나로도 표현이 가능합니다. 결국, 왼쪽 모델의 weight 개수가 아무리 많더라도 실수 하나의 값에 대응되므로 오른쪽 모델의 weight 한 개로도 표현할 수 있습니다.
 
 
 
+<p align="center"><img src="https://user-images.githubusercontent.com/77891754/178854516-059aaea0-e990-4913-8b47-b2e99b9841fd.png" alt="activation f" style="zoom:100%;" /></p>
 
 
+위에 설명한 것을 간단하게 함축해서 표현하면 위와 같습니다. 결국 1번 $(w_1^{2,2})$ 은 2번 $(\Sigma_jw_1^{2,j}w_j^{3,1})$ 을 대체할 수 있고,  $f'(x_1)(=f(f(x_1)))$ 은  $f(x_1)$ 으로 대체할 수 있으므로, 왼쪽 모델이 표현하는 모든 함수는, 오른쪽 모델이 항상 표현할 수 있습니다.
+
+이러한 결과는 **"선형 함수의 성질"**로 식 (3)의 각 항들을 풀면서 나타난 성질입니다. 이제 우리는 앞서 던졌던 질문에 대한 답을 할 수 있게 되었습니다. 반면에 다음과 같이 각 layer 마다 비선형 함수가 있다면 어떻게 될까요?
 
 
+<p align="center"><img src="https://user-images.githubusercontent.com/77891754/178854525-9718cb0e-4866-4f32-8fb9-769792394cca.png" alt="activation f" style="zoom:100%;" /></p>
 
 
+기본적인 연산은 위에서 했던 것과 같으므로, 선형 변환하기 전의 과정은 생략하고 다음 그림과 함께 살펴만보고 마치겠습니다.
 
 
-
-
+<p align="center"><img src="https://user-images.githubusercontent.com/77891754/178854533-e248fdcd-1d74-4c76-aeda-79246b412f5c.png" alt="activation f" style="zoom:100%;" /></p>
 
 
 
