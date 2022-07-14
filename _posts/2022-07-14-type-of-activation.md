@@ -67,7 +67,8 @@ Heaviside step function 라는 이름이 붙은 이유는 간단합니다. 이 
 $$
 f(x)=
 \begin{cases}
-0 \; for\ x < 0 \\ 1\; for\ x\ ≥ 0
+1\; for\ x\ ≥ 0 \\
+0 \; for\ x < 0 
 \end{cases}
 $$
 
@@ -204,6 +205,10 @@ $$
 
 ### 함수 수식
 
+$$
+f(x) = \max(0,x)
+$$
+
 
 ### 특징
 
@@ -220,11 +225,15 @@ $$
 ### 그래프
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/77891754/178926003-ca4a186d-489c-4740-8f12-6f6462995f71.png" alt="activation f" style="zoom:30%;"/>
+<img src="https://user-images.githubusercontent.com/77891754/179096121-4a65108d-4c95-4e6c-b2ae-3f818b89a2ec.png" alt="activation f" style="zoom:30%;"/>
 </p>
 
 
 ### 함수 수식
+
+$$
+f(x) = \max(0.1x,x)
+$$
 
 
 ### 특징
@@ -242,11 +251,17 @@ $$
 ### 그래프
 
 <p align="center">
-<img src="" alt="activation f" style="zoom:30%;"/>
+<img src="https://user-images.githubusercontent.com/77891754/179096297-17f4228d-895a-4817-8bce-e336f1b15ebd.png" alt="activation f" style="zoom:30%;"/>
 </p>
+
+<p align="center" style="font-size:80%">a=2</p>
 
 
 ### 함수 수식
+
+$$
+f(x) = \max(ax,x)
+$$
 
 
 ### 특징
@@ -257,31 +272,33 @@ $$
 
 
 
+## Exponential Linear Units (ELUs) Function
 
-
-
-
-
-
-
-
-
-## Softmax Function
 
 ### 그래프
 
 <p align="center">
-<img src="" alt="activation f" style="zoom:30%;"/>
+<img src="https://user-images.githubusercontent.com/77891754/179093583-7dcab1c4-fae6-4d61-b84d-3c5f4565596b.png" alt="activation f" style="zoom:30%;"/>
 </p>
+
+<p align="center" style="font-size:80%">a=1</p>
 
 
 ### 함수 수식
 
+$$
+f(x)=
+\begin{cases}
+x \;\;\;\;\;\;\;\;\;\;\;\;\; for\ x ≥ 0 \\
+a(e^x-1)\; for\ x\ < 0
+\end{cases}
+$$
 
 ### 특징
 
 
 ### 단점
+
 
 
 
@@ -292,11 +309,40 @@ $$
 ### 그래프
 
 <p align="center">
-<img src="" alt="activation f" style="zoom:30%;"/>
+<img src="https://user-images.githubusercontent.com/77891754/179097363-d8abb36a-b9ca-461f-92d5-cc9b6802a8fb.png" alt="activation f" style="zoom:30%;"/>
 </p>
 
 
 ### 함수 수식
+
+$$
+f(x) = \frac{x}{1+e^{-x}}
+$$
+
+
+### 특징
+
+
+### 단점
+
+
+
+
+## Gaussian Error Linear Unit (GELU)
+
+
+### 그래프
+
+<p align="center">
+<img src="https://user-images.githubusercontent.com/77891754/179098022-7085b1c9-65c6-4611-ab21-af27707073ad.png" alt="activation f" style="zoom:30%;"/>
+</p>
+
+
+### 함수 수식
+
+$$
+f(x) = 0.5x(1 + tanh[\sqrt(2/\pi)(x+0.044715x^3)])
+$$
 
 
 ### 특징
@@ -308,16 +354,28 @@ $$
 
 
 
+
+
 ## Scaled Exponential Linear Unit (SELU)
 
 ### 그래프
 
 <p align="center">
-<img src="" alt="activation f" style="zoom:30%;"/>
+<img src="https://user-images.githubusercontent.com/77891754/179099044-a84157f0-4be6-4187-9a7a-4d2a92603d0c.png" alt="activation f" style="zoom:30%;"/>
 </p>
+
+<p align="center" style="font-size:80%">λ=1, a=2</p>
 
 
 ### 함수 수식
+
+$$
+f(x)= \lambda
+\begin{cases}
+x \;\;\;\;\;\;\;\;\;\;\;\;\; for\ x ≥ 0 \\
+a(e^x-1)\; for\ x\ < 0
+\end{cases}
+$$
 
 
 ### 특징
