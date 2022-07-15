@@ -81,21 +81,11 @@ Figure 1에서, 특정 four-layer convolutional network에 대한 CIFAR-10 데�
 4-layer convolutional neural network에서 ReLU(실선)가 tanh 뉴런(점선)보다 CIFAR-10에서 6배 더 빠르게 25% training error rate에 도달합니다. 각 네트워크에 대한 learning rates은 가능한 한 빨리 훈련할 수 있도록 독립적으로 선택되었습니다. 어떤 종류의 regularization도 사용되지 않았습니다. 여기에서 설명하는 효과의 크기는 네트워크 아키텍처에 따라 다르지만 ReLU가 있는 네트워크가 saturating 뉴런이 있는 네트워크보다 일관되게 몇 배 더 빠르게 학습합니다.
 </p>
 
-
-물론 이런 새로운 활성함수를 고려한게 AlexNet이 처음은 아닙니다. 기존에 Jarrett은 Caltech-101 데이터셋에 대해 local average pooling으로 정규화 했을 경우 f(x) = |tanh(x)| 가 부분적으로 효과적이였다고 주장했습니다. 하지만 여기서는 overfitting을 막는 데에 초점이 맞춰져 있었기 때문에 우리가 발표한 ReLU를 사용할 때 fit 하기위해 발생되는 accelerated ability와는 다릅니다. 즉 AlexNet에서는 오버피팅 방지가 아니라 빠른 학습을 요구하기 때문에 ReLU를 사용하였습니다.
-
 **빠르게 학습하는것은 대규모 데이터 세트에서 훈련된 대규모 모델의 성능에 큰 영향을 미칩니다.**
 
 
  
 ## Training on Multiple GPUs
-
-GPU 하나의 메모리가 3GB로 너무 작기 때문에 두 개를 병행하여 사용하였다. 당시 GPU도 서로 다른 GPU의 메모리에 직접 읽고 쓰기가 가능했기 때문에 cross-GPU parallelization에 용이했다. 여기서 적용한 병렬화 전략은 커널(혹은 뉴런)의 절반만큼 각각의 GPU가 담당하게 하는 것이다. 그리고 특정 layer에서만 GPU가 서로 상호작용한다. 만약 이 특정 layer가 layer2이라면 이를 input으로 받는 layer3에서의 뉴런들은 layer2의 모든 kernel map(feature map일 것으로 추정)들로부터 입력을 받는다. 그러나 layer4의 뉴런들은 layer3에서 자신의 GPU에 할당된 부분에서만 kernel map을 입력으로 받는다. 이 상호작용의 패턴을 알아내는 것은 문제가 될 수 있지만, 이를 통해 전체 상호작용의 횟수(?)를 설정할 수 있고, 더 나아가 원하는 연산을 할 때까지 조절할 수 있다.
-
-두 개의 GPU를 사용하는 기법으 error rate를 top-1에서는 1.7%, top-5에서는 1.2가량 줄였으며, 속도도 하나만 사용하는 것보다 조금 더 빨랐다.
-
------
-
 
 단일 GTX 580 GPU에는 3GB의 메모리만 있으므로 훈련할 수 있는 네트워크의 최대 크기가 제한됩니다. 1.2백만개의 training 데이터를 사용하기에 1개의 GPU로는 충분치 않아서 두 개의 GPU를 병행하여 사용하였습니다.
 
