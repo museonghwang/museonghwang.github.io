@@ -10,8 +10,6 @@ date: 2022-07-15
 <img width="1773" alt="image" src="https://user-images.githubusercontent.com/77891754/179393371-b4703b24-49e7-48ea-bbed-9e6ed03ae118.png">
 </p>
 
-<span style="color:red">노란 글씨입니다.</span>
-
 
 
 <p align="center">
@@ -42,19 +40,12 @@ CNN의 매력적인 특성과 local architecture의 상대적 효율성에도 �
 이 논문의 기여는 다음과 같습니다.
 
 - ILSVRC-2010 및 ILSVRC-2012 대회에서 사용된 ImageNet의 subset에 대해 현재까지 가장 큰 CNN 중 하나를 훈련했으며, SOTA의 결과를 달성
-
 - 2D 합성곱과 CNN 훈련에 내재된 다른 모든 작업에 고도로 최적화된 GPU 구현을 하였으며 이를 공개
-
 - 본 network는 성능을 향상시키고 학습시간을 줄이는 여러 가지의 새롭고 특이한 특징(feature)들을 포함
-
 - 본 network의 크기는 120만 개의 라벨이 된 training dataset을 가지고도 overfitting문제를 일으켰기 때문에, overfitting을 방지하기 위한 몇 가지 효과적인 기술을 사용
-
 - 최종 network에는 5개의 convolutional layers과 3개의 fully-connected layers가 포함되어 있으며, 이 depth가 중요함
-
 - convolutional layers(각각은 모델 매개변수의 1% 이하를 포함)를 제거하면 성능이 저하된다는 것을 발견
-
 - network의 크기는 주로 현재 GPU에서 사용할 수 있는 메모리 양과 우리가 기꺼이 허용할 수 있는 training time에 의해 제한됨
-
 - 2개의 GTX 580 3GB GPU에 대해 training하는 데 5~6일 소요
 
 
@@ -64,19 +55,12 @@ CNN의 매력적인 특성과 local architecture의 상대적 효율성에도 �
 # The Dataset
 
 - ImageNet은 대략 22000개의 카테고리에 속하는 1500만 개 이상의 라벨링이 된 고해상도 이미지의 dataset.
-
 - 약 120만 개의 training image, 50,000개의 validation image, 150,000개의 test image 사용.
-
 - ImageNet에서는 2가지의 error rates(top-1 및 top-5)을 사용하는 것이 일반적.
-
 - Test set은 ILSVRC-2010 버전을 주로 사용
-
 - 이미지를 256 × 256의 고정 해상도(resolution)로 다운 샘플링(down-sampled)적용.
-
 - 직사각형 이미지는 짧은 변의 길이가 256이 되도록 rescale 후, 가운데 부분을 256 x 256 크기로 patch를 잘라냄.
-
 - 각 픽셀에서 training set에 대한 mean activity을 빼는 것을 외에는, 다른 방식으로 이미지 전처리를 하지 않았고, 픽셀의 raw RGB값에 대해 네트워크를 train을 진행
-
 - 본 논문에서는 네트워크 입력이 224×224라고 언급했지만 이는 실수이며 입력은 227×227입니다.
 
 
@@ -204,7 +188,7 @@ Max Pooling 레이어는 일반적으로 깊이를 동일하게 유지하면서 
 ## Overall Architecture
 
 <p align="center">
-<img width="1850" alt="image" src="https://user-images.githubusercontent.com/77891754/179339777-1f1354a8-388c-4b45-a7e0-6abe5b8406e7.png">
+<img src="https://user-images.githubusercontent.com/77891754/179400252-5932b46d-d856-4ff7-a1eb-802538eb5e8f.png">
 </p>
 
 <p align="center" style="font-size:80%">
@@ -212,16 +196,74 @@ Figure 2: 두 GPU 간의 책임 묘사를 명시적으로 보여주는 CNN archi
 </p>
 
 
-이제 CNN의 전체 아키텍처를 설명할 준비가 되었습니다. 그림 2에서 볼 수 있듯이 network에는 가중치가 있는 8개의 layer가 있는데, 처음 5개는 convolutional layer이고 나머지 3개는 fully-connected layer 입니다. 그리고 마지막 fully-connected layer의 출력은 1000개의 클래스에 대한 분포를 생성하는 1000-way softmax에 전달됩니다. 우리의 network는 multinomial logistic regression objective를 최대화 하는데, 이는 예측 분포에서 올바른 레이블의 log-probability의 training cases의 전반에 걸쳐 평균을 최대화하는 것과 같습니다.
-
-두 번째, 네 번째, 다섯 번째 convolutional layers의 kernel은 동일한 GPU에 있는 이전 layer의 kernel map에서만 연결됩니다. 세 번째 convolutional layer의 kernel은 두 번째 layer의 모든 kernel map에 연결됩니다. fully-connected layers의 뉴런은 이전 layer의 모든 뉴런에 연결됩니다. Response-normalization layers은 첫 번째 및 두 번째 convolutional layer을 따릅니다. Max-pooling layers은 다섯 번째 convolutional layer뿐만 아니라 Response-normalization layers 모두를 따른다. ReLU non-linearity은 모든 convolutional 및 fully-connected layers의 출력에 적용됩니다.
-
-첫 번째 convolutional layers는 4픽셀의 stride(이것은 커널 맵에서 인접한 뉴런의 receptive field(수용장) 중심 사이의 거리입니다)로 11x11x3 크기의 96개 kernel로 224x224x3 입력 이미지를 필터링합니다. 두 번째 convolutional layer는 첫 번째 convolutional layer의(response-normalized and pooled) 출력을 입력으로 받아 5 × 5 × 48 크기의 kernel 256개로 필터링합니다. 세 번째, 네 번째 및 다섯 번째 convolutional layer는 사이에 있는 pooling 또는 normalization layers 없이 서로 연결됩니다. 세 번째 convolutional layer에는 두 번째 convolutional layer의 (normalized, pooled) 출력에 연결된 3 × 3 × 256 크기의 384개의 kernel이 있습니다. 네 번째 convolutional layer에는 3 × 3 × 192 크기의 커널이 384개 있고, 다섯 번째 convolutional layer에는 3 × 3 × 192 크기의 커널이 256개 있습니다. fully-connected layers에는 각각 4096개의 뉴런이 있습니다.
+network에는 가중치가 있는 8개의 layer가 있는데, 처음 5개는 convolutional layer이고 나머지 3개는 fully-connected layer 입니다. 그리고 마지막 fully-connected layer의 출력은 1000개의 클래스에 대한 분포를 생성하는 1000-way softmax에 전달됩니다. network는 multinomial logistic regression objective를 최대화 하는데, 이는 예측 분포에서 올바른 레이블의 log-probability의 training cases의 전반에 걸쳐 평균을 최대화하는 것과 같습니다.
 
 
+- 두 번째, 네 번째, 다섯 번째 convolutional layers의 kernel은 동일한 GPU에 있는 이전 layer의 kernel map에서만 연결됩니다.
+- 세 번째 convolutional layer의 kernel은 두 번째 layer의 모든 kernel map에 연결됩니다.
+- fully-connected layers의 뉴런은 이전 layer의 모든 뉴런에 연결됩니다. 
+- Response-normalization layers은 첫 번째 및 두 번째 convolutional layer을 따릅니다.
+- Max-pooling layers은 다섯 번째 convolutional layer뿐만 아니라 Response-normalization layers을 뒤따릅니다.
+- ReLU non-linearity은 모든 convolutional 및 fully-connected layers의 출력에 적용됩니다.
 
 
+조금 더 자세한 그림을 보겠습니다.
 
+
+<p align="center">
+<img width="1430" alt="image" src="https://user-images.githubusercontent.com/77891754/179400164-d6f15758-8167-4611-8ee4-cf6a82e8a8d5.png">
+</p>
+
+<p align="center" style="font-size:80%">이미지 출처 : learnopencv</a></p>
+
+
+- 첫 번째 convolutional layers는 4픽셀의 stride(이것은 커널 맵에서 인접한 뉴런의 receptive field(수용장) 중심 사이의 거리입니다)로 11 x 11 x 3 크기의 96개 kernel로 227 x 227 x 3 입력 이미지를 필터링합니다.
+- 두 번째 convolutional layer는 첫 번째 convolutional layer의(response-normalized and pooled) 출력을 입력으로 받아 5 × 5 × 96 크기의 kernel 256개로 필터링합니다.
+- 세 번째 convolutional layer에는 두 번째 convolutional layer의 (normalized, pooled) 출력에 연결된 3 × 3 × 256 크기의 384개의 kernel이 있습니다.
+- 네 번째 convolutional layer에는 3 × 3 × 384 크기의 커널이 384개 있습니다.
+- 다섯 번째 convolutional layer에는 3 × 3 × 384 크기의 커널이 256개 있습니다.
+- fully-connected layers에는 각각 4096개의 뉴런이 있습니다.
+
+
+이와 관련된 또다른 이미지 입니다.
+
+
+<p align="center">
+<img width="747" alt="image" src="https://user-images.githubusercontent.com/77891754/179400971-d3e20a9d-8359-4480-b9c2-115270b3cec2.png" style="zoom:70%;">
+</p>
+
+
+정리하면 다음과 같습니다.
+
+- Layer 0: Input image
+    - Size: 227 x 227 x 3
+- Layer 1: Convolution with 96 filters, size 11×11, stride 4, padding 0
+    - Size: 55 x 55 x 96
+    - (227-11)/4 + 1 = 55 는 결과 사이즈
+- Layer 2: Max-Pooling with 3×3 filter, stride 2
+    - Size: 27 x 27 x 96
+    - (55 – 3)/2 + 1 = 27 는 결과 사이즈
+- Layer 3: Convolution with 256 filters, size 5×5, stride 1, padding 2
+    - Size: 27 x 27 x 256
+    - (5-1)/2=2, 패딩으로 인해 원래 크기로 복원
+- Layer 4: Max-Pooling with 3×3 filter, stride 2
+    - Size: 13 x 13 x 256
+    - (27 – 3)/2 + 1 = 13 는 결과 사이즈
+- Layer 5: Convolution with 384 filters, size 3×3, stride 1, padding 1
+    - Size: 13 x 13 x 384
+    - (3-1)/2=1, 패딩으로 인해 원래 크기로 복원
+- Layer 6: Convolution with 384 filters, size 3×3, stride 1, padding 1
+    - Size: 13 x 13 x 384
+    - (3-1)/2=1, 패딩으로 인해 원래 크기로 복원
+- Layer 7: Convolution with 256 filters, size 3×3, stride 1, padding 1
+    - Size: 13 x 13 x 256
+    - (3-1)/2=1,  패딩으로 인해 원래 크기로 복원
+- Layer 8: Max-Pooling with 3×3 filter, stride 2
+    - Size: 6 x 6 x 256
+    - (13 – 3)/2 + 1 = 6 는 결과 사이즈
+- Layer 9: Fully Connected with 4096 neuron
+- Layer 10: Fully Connected with 4096 neuron
+- Layer 11: Fully Connected with 1000 neurons
 
 
 
@@ -232,21 +274,60 @@ Figure 2: 두 GPU 간의 책임 묘사를 명시적으로 보여주는 CNN archi
 
 ## Data Augmentation
 
-이미지 데이터에 대한 overfitting을 줄이는 가장 쉽고 일반적인 방법은 label-preserving transformations을 사용하여 데이터 세트를 인위적으로 확대하는 것입니다. 우리는 두 가지 다른 형태의 data augmentation을 사용하는데, 두 가지 모두 아주 적은 계산으로 원본 이미지에서 변환된 이미지를 생성할 수 있으므로, 변환된 이미지를 디스크에 저장할 필요가 없습니다. 구현에서 변환된 이미지는 GPU가 이전 이미지 batch에서 training하는 동안 CPU의 Python 코드에서 생성됩니다. 따라서 이러한 데이터 증대 체계는 사실상 계산상 무료입니다.
-
-
-데이터 증강의 첫 번째 형태는 image translations and horizontal reflections으로 구성됩니다. 256×256 이미지에서 임의의 224×224 패치(및 수평 반사)를 추출하고, 추출된 패치에 대해 네트워크를 훈련하여 이를 수행합니다. 이것은 물론 training dataset의 상호 의존성이 높지만, 우리의 training dataset의 크기를 2048배 증가시킨다. 이 체계가 없었다면 우리의 네트워크는 상당한 과적합으로 고통받았고, 이는 우리가 훨씬 더 작은 네트워크를 사용하도록 강요했을 것입니다. 테스트 시간에 네트워크는 5개의 224 × 224 패치(4개의 모서리 패치와 중앙 패치)와 수평 반사(따라서 모두 10개의 패치)를 추출하고, 열 개의 패치에 대한 네트워크의 softmax 레이어에서 만든 예측을 평균화하여 예측합니다. 테스트 시간에 네트워크는 5개의 224 × 224 patches(4개의 corner patches 및 1개의 center patch)와 horizontal reflections(따라서 모두 10개의 patches)를 추출하고, 10개의 patches에 대해 network의 softmax layer에 의해 만들어진 예측을 평균화함으로써 예측합니다.
+논문의 저자는 Augmentation이 없었다면 상당한 overfitting에 빠졌을 것이라고 말합니다.
 
 
 
-데이터 증대의 두 번째 형태는 training 이미지에서 RGB 채널의 강도를 변경하는 것으로 구성됩니다. 특히 ImageNet training set 전체에 걸쳐 RGB 픽셀 값 세트에 대해 PCA를 수행합니다. 각 이미지를 훈련시키기 위해 발견된 주성분의 배수를 추가하며, 해당 고윳값에 비례하는 크기로 평균 0과 표준 편차 0.1을 가진 가우스분포에서 추출된 무작위 변수를 곱합니다. 따라서 각 RGB 이미지 픽셀 $I_{xy} = [I^R_{xy}, I^G_{xy}, I^B_{xy}]^T$에 다음의 량을 추가합니다.
+### image horizontal reflections image translation
+
+- 좌우반전(horizontal reflections)을 이용하여 패치를 추출하고, 이미지의 양을 2배로 증가
+
+
+<p align="center">
+<img width="697" alt="image" src="https://user-images.githubusercontent.com/77891754/179401752-c9a6f452-aeea-4bb0-9a56-61c38d0ed3e1.png" style="zoom:70%;">
+</p>
+
+<p align="center" style="font-size:80%">이미지 출처 : learnopencv</a></p>
+
+
+
+### image translation
+
+- 256×256 이미지에서 랜덤하게 227×227 패치를 추출하여 1024배 증가, 총 2048배 증가
+
+
+<p align="center">
+<img width="726" alt="image" src="https://user-images.githubusercontent.com/77891754/179401759-e874be86-46e1-4ed7-8651-cda47610dc65.png" style="zoom:70%;">
+</p>
+
+<p align="center" style="font-size:80%">이미지 출처 : learnopencv</a></p>
+
+
+
+### Test
+
+- 5개의 224 × 224 patches(4개의 corner patches 및 1개의 center patch)와 horizontal reflections(따라서 모두 10개의 patches)를 생성
+- 10개의 patches에 대해 network의 softmax layer에 의해 만들어진 예측을 평균화함으로써 예측
+
+
+
+### jittering
+
+- the top-1 error rate을 1% 이상 감소시킵니다.
+- overfitting을 감소시켰습니다.
+- training 이미지에서 RGB 채널의 강도를 변경합니다.
+- RGB 픽셀 값 세트에 대해 PCA를 수행하여 발견된 주성분의 배수를 추가해줍니다.
+
+
+다음과 같은 값을 모든 픽셀에 더해줍니다.
+
 
 $$
-[p_1, p_2, p_3][\alpha_1\lambda_1, \alpha_2\lambda_2, \alpha_3\lambda_3]^T
+I_{xy} = [I^R_{xy}, I^G_{xy}, I^B_{xy}]^T +[p_1, p_2, p_3][\alpha_1\lambda_1, \alpha_2\lambda_2, \alpha_3\lambda_3]^T \\ \alpha_i ~ N(0, 0.1)
 $$
 
-여기서 $p_i$ 및 $λ_i$는 각각 RGB 픽셀 값의 3 × 3 공분산 행렬의 $i$번째 고유벡터 및 고유값이고, $α_i$는 앞서 언급한 랜덤 변수입니다. 각 $α_i$는 해당 이미지가 다시 훈련에 사용될 때까지 특정 training 이미지의 모든 픽셀에 대해 한 번만 그려지고, 그 시점에서 다시 그려집니다. 이 체계는 대략적으로 natural images의 중요한 특성을 포착합니다. 즉, object의 정체성은 조명의 강도와 색상의 변화에 따라 변하지 않는다는 것입니다. 이 방식은 the top-1 error rate을 1% 이상 감소시킵니다.
 
+여기서 $I_{xy}$는 RGB 이미지 픽셀이며, $p_i$ 및 $λ_i$는 각각 RGB 픽셀 값의 3 × 3 공분산 행렬의 $i$번째 고유벡터 및 고유값이고, $α_i$는 앞서 언급한 랜덤 변수입니다. 각 $α_i$는 해당 이미지가 다시 훈련에 사용될 때까지 특정 training 이미지의 모든 픽셀에 대해 한 번만 그려지고, 그 시점에서 다시 그려집니다. 이 체계는 대략적으로 natural images의 중요한 특성을 포착합니다. 즉, object의 정체성은 조명의 강도와 색상의 변화에 따라 변하지 않는다는 것입니다.
 
 
 
@@ -254,14 +335,23 @@ $$
 
 ## Dropout
 
-다양한 모델의 예측을 결합하는 것은 test errors를 줄이는 매우 성공적인 방법이지만, 이미 훈련하는 데 며칠이 걸리는 대규모 신경망에는 너무 많은 비용이 드는 것으로 보입니다. 그러나 훈련하는 동안 비용이 약 2배에 불과한 매우 효율적인 모델 조합 버전이 있습니다. 최근에 도입된 "dropout" 기법은 0.5의 확률로 각 은닉 뉴런의 출력을 0으로 설정하는 것으로 구성됩니다. 이러한 방식으로 "dropped out"된 뉴런은 순방향 전달에 기여하지 않고 역전파에 참여하지 않습니다. 따라서 입력이 제공될 때마다 신경망은 다른 아키텍처를 샘플링하지만, 이러한 모든 아키텍처는 가중치를 공유합니다. 뉴런이 특정 다른 뉴런의 존재에 의존할 수 없기 때문에, 이 기술은 뉴런의 복잡한 co-adaptations을 감소시킵니다. 따라서 다른 뉴런의 다양한 무작위 하위 집합의 연결이 유용한 보다 더 강건한 feature를 학습하는데 집중하게한다. 테스트 시, 우리는 모든 뉴런을 사용하지만 출력에 0.5를 곱합니다. 이는 기하급수적으로 많은 dropout networks에서 생성된 예측 분포의 기하 평균을 취하는 합리적인 근사치입니다.
+<p align="center">
+<img src="https://user-images.githubusercontent.com/77891754/179402669-11336bd6-a46a-49b8-b286-c487dda46244.gif" style="zoom:100%;">
+</p>
 
-처음 2개의 fully-connected layers에서 dropout을 사용합니다. dropout이 없으면 네트워크는 상당한 overfitting을 나타냅니다. Dropout은 수렴에 필요한 반복 횟수를 대략 두 배로 늘립니다
+<p align="center" style="font-size:80%">이미지 출처 : medium</a></p>
 
 
+다양한 모델의 예측을 결합하는 것은 test errors를 줄이는 nice한 방법이지만, 훈련하는 데 며칠이 걸리는 대규모 신경망에는 너무 많은 비용이 듭니다. 그러나 훈련하는 동안 비용이 약 2배에 불과한 매우 효율적인 모델인 Dropout을 사용하면 됩니다.
 
 
+"dropped out"된 뉴런은 순방향 전달에 기여하지 않고 역전파에 참여하지 않기 때문에 입력이 제공될 때마다 신경망은 다른 아키텍처를 샘플링하지만, 이러한 모든 아키텍처는 가중치를 공유합니다. 즉 뉴런들 사이의 의존성을 낮추며, co-adaptations을 감소시킵니다. 따라서 다른 뉴런의 다양한 무작위 하위 집합의 연결이 유용한 보다 더 강건한 feature를 학습하는데 집중하게합니다.
 
+
+- 0.5의 확률로 각 hidden neuron의 값을 0으로 바꿔줍니다.
+- 3개 중 처음 2개의 fully-connected layers에서 dropout을 사용합니다.
+- dropout이 없으면 네트워크는 상당한 overfitting을 나타냅니다.
+- Test시 dropout 적용 x, 대신 출력에 0.5를 곱해준다.
 
 
 
