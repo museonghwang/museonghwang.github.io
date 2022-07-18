@@ -103,7 +103,7 @@ ReLU를 사용하여 더 빨리 훈련하는 이유를 살펴보겠습니다. Ta
 <img width="1889" alt="image" src="https://user-images.githubusercontent.com/77891754/179395879-b7df0e52-8951-4335-945d-3ae2512f2846.png" style="zoom:80%;">
 </p>
 
-<p align="center" style="font-size:80%">이미지 출처 : learnopencv</a></p>
+<p align="center" style="font-size:80%">이미지 출처 : learnopencv</p>
 
 
 tanh 함수는 z가 조금만 커지거나 작아지면 매우 높거나 매우 낮은 값에서 포화(saturating)됩니다. 이 영역에서 함수의 기울기는 0에 매우 가까운데, 이것은 경사하강법을 늦출 수 있습니다. 반면에 ReLU 함수에서 z가 커져도 기울기가 0으로 가지 않는, 포화상태가 되지 않습니다(non-saturating). 이렇게 하면 최적화가 더 빨리 수렴되는 데 도움이 됩니다. z의 음수 값의 경우 기울기는 여전히 0이지만 신경망의 대부분의 뉴런은 일반적으로 양수 값을 갖게 됩니다. 같은 이유로 ReLU도 시그모이드 함수보다 우위에 있습니다.
@@ -159,14 +159,14 @@ $(x, y)$ position에 있는 $i$번째 kernel에 적용한 다음 ReLU nonlineari
 
 
 
-Local Response Normalization은 아래 그림의 예를 통해 이해할 수 있습니다. 각각의 다른 색상은 다른 채널을 나타내므로 $N=4$이며, 하이퍼파라미터를 $(k,α,β,n)=(0,1,1,2)$라고 정의하겠습니다. $n=2$라는 의미는 위치 $(i,x,y)$에서 정규화된 값을 계산하는 동안, 이전 및 다음 필터인 $(i-1, x, y)$ and $(i+1, x, y)$에 대해 동일한 위치의 값을 고려한다는 의미입니다. $(i,x,y)=(0,0,0)$의 경우 $normalized_value(i,x,y) = 1/(1^2+1^2) = 0.5$ 입니다. 나머지 정규화된 값도 비슷한 방식으로 계산됩니다.
+Local Response Normalization은 아래 그림의 예를 통해 이해할 수 있습니다. 각각의 다른 색상은 다른 채널을 나타내므로 $N=4$이며, 하이퍼파라미터를 $(k,α,β,n)=(0,1,1,2)$라고 정의하겠습니다. $n=2$라는 의미는 위치 $(i,x,y)$에서 정규화된 값을 계산하는 동안, 이전 및 다음 필터인 $(i-1, x, y)$ and $(i+1, x, y)$에 대해 동일한 위치의 값을 고려한다는 의미입니다. $(i,x,y)=(0,0,0)$의 경우 $normalized\ value(i,x,y) = 1/(1^2+1^2) = 0.5$ 입니다. 나머지 정규화된 값도 비슷한 방식으로 계산됩니다.
 
 
 <p align="center">
 <img width="831" alt="image" src="https://user-images.githubusercontent.com/77891754/179398683-a0b59020-3446-4060-a8f4-1dde0990c5d5.png" style="zoom:40%;">
 </p>
 
-<p align="center" style="font-size:80%">이미지 출처 : medium</a></p>
+<p align="center" style="font-size:80%">이미지 출처 : medium</p>
 
 
 
@@ -268,6 +268,7 @@ network에는 가중치가 있는 8개의 layer가 있는데, 처음 5개는 con
 
 
 
+
 # Reducing Overfitting
 
 
@@ -287,7 +288,7 @@ network에는 가중치가 있는 8개의 layer가 있는데, 처음 5개는 con
 <img width="697" alt="image" src="https://user-images.githubusercontent.com/77891754/179401752-c9a6f452-aeea-4bb0-9a56-61c38d0ed3e1.png" style="zoom:70%;">
 </p>
 
-<p align="center" style="font-size:80%">이미지 출처 : learnopencv</a></p>
+<p align="center" style="font-size:80%">이미지 출처 : learnopencv</p>
 
 
 
@@ -300,7 +301,7 @@ network에는 가중치가 있는 8개의 layer가 있는데, 처음 5개는 con
 <img width="726" alt="image" src="https://user-images.githubusercontent.com/77891754/179401759-e874be86-46e1-4ed7-8651-cda47610dc65.png" style="zoom:70%;">
 </p>
 
-<p align="center" style="font-size:80%">이미지 출처 : learnopencv</a></p>
+<p align="center" style="font-size:80%">이미지 출처 : learnopencv</p>
 
 
 
@@ -316,18 +317,23 @@ network에는 가중치가 있는 8개의 layer가 있는데, 처음 5개는 con
 - the top-1 error rate을 1% 이상 감소시킵니다.
 - overfitting을 감소시켰습니다.
 - training 이미지에서 RGB 채널의 강도를 변경합니다.
-- RGB 픽셀 값 세트에 대해 PCA를 수행하여 발견된 주성분의 배수를 추가해줍니다.
+- 이미지의 각 RGB 픽셀에 PCA를 적용하여 평균=0, 표준편차=0.1을 갖는 랜덤 변수를 곱한 뒤 기존 픽셀에 더해줍니다.
 
 
 다음과 같은 값을 모든 픽셀에 더해줍니다.
 
 
 $$
-I_{xy} = [I^R_{xy}, I^G_{xy}, I^B_{xy}]^T +[p_1, p_2, p_3][\alpha_1\lambda_1, \alpha_2\lambda_2, \alpha_3\lambda_3]^T \\ \alpha_i ~ N(0, 0.1)
+I_{xy} = [I^R_{xy}, I^G_{xy}, I^B_{xy}]^T +[p_1, p_2, p_3][\alpha_1\lambda_1, \alpha_2\lambda_2, \alpha_3\lambda_3]^T \\ \alpha_i \sim N(0, 0.1)
 $$
 
 
-여기서 $I_{xy}$는 RGB 이미지 픽셀이며, $p_i$ 및 $λ_i$는 각각 RGB 픽셀 값의 3 × 3 공분산 행렬의 $i$번째 고유벡터 및 고유값이고, $α_i$는 앞서 언급한 랜덤 변수입니다. 각 $α_i$는 해당 이미지가 다시 훈련에 사용될 때까지 특정 training 이미지의 모든 픽셀에 대해 한 번만 그려지고, 그 시점에서 다시 그려집니다. 이 체계는 대략적으로 natural images의 중요한 특성을 포착합니다. 즉, object의 정체성은 조명의 강도와 색상의 변화에 따라 변하지 않는다는 것입니다.
+- $I_{xy}$는 RGB 이미지 픽셀
+- $p_i$ 및 $λ_i$는 각각 RGB 픽셀 값의 3 × 3 공분산 행렬의 $i$번째 고유벡터 및 고유값
+- $α_i$는 앞서 언급한 랜덤 변수
+
+
+각 $α_i$는 해당 이미지가 다시 훈련에 사용될 때까지 특정 training 이미지의 모든 픽셀에 대해 한 번만 그려지고, 그 시점에서 다시 그려집니다. 이 체계는 대략적으로 natural images의 중요한 특성을 포착합니다. 즉, object의 정체성은 조명의 강도와 색상의 변화에 따라 변하지 않는다는 것입니다.
 
 
 
@@ -339,10 +345,10 @@ $$
 <img src="https://user-images.githubusercontent.com/77891754/179402669-11336bd6-a46a-49b8-b286-c487dda46244.gif" style="zoom:100%;">
 </p>
 
-<p align="center" style="font-size:80%">이미지 출처 : medium</a></p>
+<p align="center" style="font-size:80%">이미지 출처 : medium</p>
 
 
-다양한 모델의 예측을 결합하는 것은 test errors를 줄이는 nice한 방법이지만, 훈련하는 데 며칠이 걸리는 대규모 신경망에는 너무 많은 비용이 듭니다. 그러나 훈련하는 동안 비용이 약 2배에 불과한 매우 효율적인 모델인 Dropout을 사용하면 됩니다.
+다양한 모델의 예측을 결합하는 것은 test errors를 줄이는 nice한 방법이지만, 훈련하는 데 며칠이 걸리는 대규모 신경망 네트워크는 깊고 훈련하는데 오래걸리기 때문에 이 앙상블 기법을 사용하기 어려웠습니다. 그러나 훈련하는 동안 비용이 약 2배에 불과한 매우 효율적인 모델인 Dropout을 사용하면 됩니다.
 
 
 "dropped out"된 뉴런은 순방향 전달에 기여하지 않고 역전파에 참여하지 않기 때문에 입력이 제공될 때마다 신경망은 다른 아키텍처를 샘플링하지만, 이러한 모든 아키텍처는 가중치를 공유합니다. 즉 뉴런들 사이의 의존성을 낮추며, co-adaptations을 감소시킵니다. 따라서 다른 뉴런의 다양한 무작위 하위 집합의 연결이 유용한 보다 더 강건한 feature를 학습하는데 집중하게합니다.
@@ -359,34 +365,79 @@ $$
 
 # Details of learning
 
-우리는 128개의 batch size, 0.9의 momentum, 0.0005의 weight decay를 사용하여 stochastic gradient descent을 사용하여 모델을 훈련했습니다. 우리는 이 소량의 가중치 감소가 모델이 학습하는 데 중요하다는 것을 발견했습니다. 다시 말해, 여기서 가중치 감소는 단순한 정규화가 아니라 모델의 training error를 줄입니다.
+
+
+## stochastic gradient descent
+- batch size : 128
+- momentum : 0.9
+- weight decay : 0.0005
+    - 소량의 가중치 감소가 모델이 학습하는 데 중요하다는 것을 발견했는데, 여기서 가중치 감소는 단순한 정규화가 아니라 모델의 training error를 줄입니다.
+- learning rate : 0.01
+    - validation error rate가 현재 learning rate로 개선되지 않을 때 learning rate을 10으로 나눔
+    - 실험 중 총 3번
+
 
 가중치 w에 대한 업데이트 규칙은 다음과 같습니다.
+
+
+<p align="center">
+<img width="1010" alt="image" src="https://user-images.githubusercontent.com/77891754/179429810-7e7dcaaa-c6d2-430d-9517-f6b511dfd61a.png" style="zoom:50%;">
+</p>
+
 
 - $i$ : iteration index
 - $v$ : momentum variable
 - $ε$ : learning rate,
-- $\left\langle \frac{∂L}{∂w}|_{w_i} \right\rangle_{D_i}$ : $w_i$에서 평가된, $w$에 대한 목적 도함수의 $i$번째 배치 $D_i$에 대한 평균입니다.
+- $ \left\langle \frac{∂L}{∂w}|_{w_i} \right\rangle_{D_i}$ : $w_i$에서 평가된, $w$에 대한 목적 도함수의 $i$번째 배치 $D_i$에 대한 평균입니다.
 
 
-표준 편차가 0.01인 zero-mean Gaussian distribution에서 각 레이어의 가중치를 초기화했습니다. 두 번째, 네 번째, 다섯 번째 convolutional layers와 fully-connected hidden layers에서 neuron biases을 상수 1로 초기화했습니다. 이 초기화는 ReLU에 positive인 inputs을 제공하여 학습의 초기 단계를 가속화시킵니다. 나머지 layers의 neuron biases을 상수 0으로 초기화했습니다.
+
+## weight initialization
+- mean=0, std=0.01 Gaussian distribution 초기화
+- 첫 번째, 세 번째 convolutional layers의 biases : 상수 0으로 초기화
+- 나머지 layer : 상수 1로 초기화
+    - 이 초기화는 ReLU에 positive인 inputs을 제공하여 학습의 초기 단계를 가속화시킵니다.
 
 
-우리는 모든 layers에 대해 동일한 learning rate을 사용했으며, training 내내 수동으로 조정했습니다. 우리가 따랐던 휴리스틱은 validation error rate가 현재 learning rate로 개선되지 않을 때 learning rate을 10으로 나누는 것이었습니다. learning rate은 0.01로 초기화되었고 종료 전에 3번 감소했습니다. 우리는 120만개의 이미지인 training set가 대략 90번의 cycles을 하는 네트워크를 훈련했고, 2개의 NVIDIA GTX 580 3GB GPU에서 5~6일이 소요되었습니다.
+
+## train
+
+- dropout : 0.5
+- epoch : 90
+- 2개의 NVIDIA GTX 580 3GB GPU에서 5~6일 소요
+
 
 
 
 
 # Results
 
-ILSVRC-2010에 대한 결과는 표 1에 요약되어 있습니다. 우리의 네트워크는 37.5%와 17.0%의 top-1 and top-5 test set error rates을 달성했습니다. ILSVRC 2010 대회에서 달성한 최고의 성능은 서로 다른 feature에 대해 training된 6개의 sparse-coding 모델에서 생성된 예측을 평균화하는 접근 방식으로 47.1%와 28.2%였으며, 그러고 나서 가장 잘 발표된 결과는 두 가지 유형의 조밀하게 샘플링된 features로 부터 계산되는 Fisher Vectors(FVs)에 대해 훈련된 두 분류기의 예측을 평균화하는 접근 방식으로 45.7%와 25.7%였다.
+ILSVRC-2010에 대한 결과는 Table 1에 요약되어 있습니다.
 
 
-우리는 또한 ILSVRC-2012 대회에 우리 모델을 입력했고 결과를 표 2에 보고했습니다. ILSVRC-2012 test set labels은 공개적으로 사용할 수 없기 때문에, 우리가 시도한 모든 모델에 대한 test error rates를 보고할 수 없습니다. 이 단락의 나머지 부분에서는 경험상 0.1% 이상 차이가 나지 않기 때문에 validation and test error rates을 서로 바꿔서 사용합니다(표 2 참조). 이 논문에서 설명하는 CNN은 18.2%의 top-5 error rate을 달성했습니다. 5개의 유사한 CNN의 예측을 평균하면 16.4%의 error rate이 나타납니다. 마지막 pooling layer 위에 여섯 번째 convolutional layer가 추가된 하나의 CNN을 training하여, 전체 ImageNet Fall 2011 release(15M images, 22K categories)를 분류한 다음, ILSVRC-2012에서 "fine-tuning"하면 error rate가 16.6%에 달합니다. 앞서 언급한 5개의 CNN을 사용하여 전체 2011년 Fall release에서 pre-trained된 2개의 CNN 예측을 평균하면 15.3%의 error rate을 얻을 수 있습니다. 두 번째로 우수한 공모전 출품작은 서로 다른 유형의 조밀하게 샘플링된 feature에서 계산된 FV에 대해 훈련된 여러 분류기의 예측을 평균화하는 접근 방식으로 26.2%의 error rate을 달성했습니다.
+<p align="center">
+<img width="1441" alt="image" src="https://user-images.githubusercontent.com/77891754/179430873-aa2937c8-cee2-4aff-8176-95df20dd77a4.png" style="zoom:30%;">
+</p>
 
 
-마지막으로 10,184개의 카테고리와 890만 개의 이미지가 있는 ImageNet의 2009년 Fall 버전에 대한 error rate도 보고합니다. 이 dataset에서 우리는 이미지의 절반을 training에 사용하고 절반을 test에 사용하는 문헌의 규칙을 따릅니다. 확정된 test set가 없기 때문에, 우리의 분할은 이전 작성자가 사용한 분할과 다르지만, 결과에 상당한 영향은 미치지 않습니다. 이 dataset의 top-1 및 top-5 error rates은 67.4% 및 40.9%로, 위에서 설명한 네트워크에 의해 달성되지만 마지막 풀링 계층 위 추가로 여섯 번째 컨볼루션 계층이 있습니다. 이 dataset에서 가장 잘 발표된 결과는 78.1%와 60.9%입니다.
+본 네트워크는 top-1 및 top-5 test set error rates를 각각 37.5%와 17.0%의 달성하였습니다. 당시 발표된 방법 중 47.1%, 28.2%를 기록한 팀은 6개의 sparse-coding된 모델의 예측을 평균하여 기록을 달성하였고, 45.7%, 25.7%의 모델은 2가지 종류의 밀접한 특성을 이용한 Fisher Vectors를 계산하여 2개의 분류기의 예측을 평균하여 기록을 내었는데, 당시의 방법론 보다 훨씬 좋은 성능을 보여주었습니다.
 
+
+또한 ILSVRC-2012에도 참가하였는데 그에 대한 기록은 Table 2에 나와있습니다.
+
+
+<p align="center">
+<img width="1670" alt="image" src="https://user-images.githubusercontent.com/77891754/179430888-2609a1fc-c824-4035-b0ec-5aca1f0232cb.png" style="zoom:35%;">
+</p>
+
+
+ILSVRC-2012 test set labels은 라벨링이 되어있지 않아서 우리가 시도한 모든 모델들의 test error rates을 기록하지는 못했습니다. 특히 val 과 test의 error rates이 0.1%의 이상 차이가 나지 않기 때문에 둘을 같은 결과로 사용했습니다.
+
+
+- 본 논문에서의 CNN은 18.2%의 top-5 error rate을 기록했습니다.
+- 비슷한 CNN 5개의 예측을 평균하면 16.4%의 error rate가 나타납니다.
+- 마지막 pooling layer 위에 여섯 번째 convolutional layer가 추가된 하나의 CNN을 training하여, 전체 ImageNet Fall 2011 release를 분류한 다음, ILSVRC-2012에서 "fine-tuning"하면 error rate가 16.6%에 달합니다.
+- 앞서 언급한 fine-tuning 모댈 2개와 5개의 CNN을 예측을 평균하면 15.3%의 error rate을 얻을 수 있습니다.
 
 
 
@@ -395,53 +446,19 @@ ILSVRC-2010에 대한 결과는 표 1에 요약되어 있습니다. 우리의 �
 # Qualitative Evaluations
 
 
+<p align="center">
+<img width="1720" alt="image" src="https://user-images.githubusercontent.com/77891754/179430570-8c42826a-3bcc-410a-9d56-ade3ec382c38.png" style="zoom:40%;">
+</p>
 
-그림 3은 network의 2개의 data-connected layers에서 학습한 convolutional kernels을 보여줍니다. 네트워크는 다양한 색상의 blobs뿐만 아니라 다양한 frequency 및 orientation-selective kernels을 학습했습니다. 섹션 3.5에 설명된 제한된 연결의 결과인 두 GPU에 의해 나타나는 specialization에 주목하십시오. GPU 1의 커널은 대체로 색상에 구애받지 않는 반면, GPU 2의 커널은 대부분 색상에 따라 다릅니다. 이러한 종류의 specialization는 모든 실행 중에 발생하며, 특정 랜덤 가중치 초기화(modulo a renumbering of the GPUs)와는 무관합니다.
-
-
-그림 4의 왼쪽 panel에서 우리는 network가 8개의 test images에 대한 top-5 예측을 계산하여 학습한 내용을 정성적으로 평가합니다. 왼쪽 상단의 진드기와 같이 중심에서 벗어난 objects도 network에 의해 인식될 수 있습니다. top-5 레이블의 대부분은 합리적으로 보입니다. 예를 들어, 다른 종류의 고양이만 표범에 대한 그럴듯한 라벨로 간주됩니다. 경우에 따라(grille, cherry) 사진의 의도된 초점이 모호합니다.
-
-
-
-network의 visual knowledge을 조사하는 또 다른 방법은 마지막 4096-dimensional hidden layer에서 이미지에 의해 유도된 feature activations를 고려하는 것입니다.
-
-두 이미지가 작은 Euclidean 분리로 feature activation vectors를 생성한다면, 우리는 신경망의 더 높은 levels이 그들과 유사한 것으로 간주한다고 말할 수 있습니다.(???)
-
-그림 4는 이 측정에 따라 test set의 5개 이미지와 각각 가장 유사한training set의 6개 이미지를 보여줍니다.
-
-픽셀 수준에서 검색된 training images는 일반적으로 첫 번째 열의 쿼리 이미지와 L2에서 가깝지 않습니다.
-
-예를 들어, 검색된 개와 코끼리는 다양한 포즈를 취합니다. 우리는 보충 자료에 더 많은 테스트 이미지에 대한 결과를 제시합니다.
+<p align="center" style="font-size:80%">Figure 3: 224x224x3 입력 이미지에서 첫 번째 convolutional layer에서 학습한 11x11x3 크기의 96개 convolutional kernel. 상위 48개 kernel은 GPU 1에서 학습되고 하위 48개 kernel은 GPU 2에서 학습되었습니다.</p>
 
 
+이 network에서는 다양한 주파수(frequency), 방향(orientation-selective), 색상(blobs)들을 학습했습니다. GPU1의 kernels은 주로 색깔정보가 없지만 GPU2의 kernels은 다양한 색상을 담고있습니다. 이런 특성은 랜덤한 가중치 초기화와는 무관하게 매 실행마다 발생합니다.
 
-
-
-
-
-두 4096차원 실제 값 벡터 사이의 유클리드 거리를 사용하여 유사성을 계산하는 것은 비효율적이지만, 이러한 벡터를 짧은 이진 코드로 압축하도록 auto-encoder를 training 함으로써 효율적일 수 있습니다.
-
-이것은 이미지 레이블을 사용하지 않기 때문에 의미적으로 유사하든 그렇지 않든 유사한 가장자리의 패턴을 가진 이미지를 검색하는 경향이 있는, 원시 픽셀에 auto-encoder를 적용하는 것보다 훨씬 더 나은 이미지 검색 방법을 생성해야 합니다.
 
 <p align="center">
-<img width="1740" alt="image" src="https://user-images.githubusercontent.com/77891754/179342930-d4248786-8375-403b-b3ef-fbebf1f17ad9.png">
+<img width="1728" alt="image" src="https://user-images.githubusercontent.com/77891754/179430613-ac5992a8-2b39-46bb-b180-4e0744a853a0.png" style="zoom:100%;">
 </p>
 
-<p align="center" style="font-size:80%">
-(Left) 8개의 ILSVRC-2010 테스트 이미지와 우리 모델에서 가장 가능성이 높은 것으로 간주되는 5개의 레이블. 올바른 레이블이 각 이미지 아래에 기록되고 올바른 레이블에 할당된 확률도 빨간색 막대로 표시됩니다(상위 5개에 있는 경우).
-
-(Right) 첫 번째 열에 있는 5개의 ILSVRC-2010 테스트 이미지. 나머지 열은 테스트 이미지에 대한 특징 벡터로부터 유클리드 거리가 가장 작은 마지막 은닉층에서 특징 벡터를 생성하는 6개의 훈련 이미지를 보여줍니다.
-</p>
-
-# Discussion
-
-
-
-우리의 결과는 크고 깊은 convolutional neural network이 순수 supervised learning을 사용하여 매우 까다로운 dataset에서 기록적인 결과를 달성할 수 있음을 보여줍니다. 단일 convolutional layer가 제거되면 네트워크 성능이 저하된다는 점은 주목할 만합니다. 예를 들어 중간 layer을 제거하면 network의 top-1 performance에 대해 약 2%의 손실이 발생합니다. 따라서 깊이는 결과를 달성하는 데 정말 중요합니다.
-
-
-
-실험을 단순화하기 위해, 특히 라벨링 된 데이터의 양에 상응하는 증가 없이 네트워크 크기를 크게 늘릴 수 있는 충분한 계산 능력을 얻는 경우, 도움이 될 것으로 예상되지만 unsupervised pre-training을 사용하지 않았습니다. 지금까지 우리의 결과는 네트워크를 더 크게 만들고 더 오래 훈련했기 때문에 개선되었지만, human visual system의 infero-temporal pathway와 일치시키기 위해서는 아직 가야 할 많은 양의 순서가 있습니다. 궁극적으로 우리는 temporal structure가 static images에서 누락되거나 훨씬 덜 분명하지만 매우 유용한 정보를 제공하는 video sequences에 매우 크고 깊은 convolutional nets를 사용하고 싶습니다.
-
-
+<p align="center" style="font-size:80%">(Left) 8개의 ILSVRC-2010 테스트 이미지와 우리 모델에서 가장 가능성이 높은 것으로 간주되는 5개의 레이블. 올바른 레이블이 각 이미지 아래에 기록되고 올바른 레이블에 할당된 확률도 빨간색 막대로 표시됩니다(상위 5개에 있는 경우). (Right) 첫 번째 열에 있는 5개의 ILSVRC-2010 테스트 이미지. 나머지 열은 테스트 이미지에 대한 특징 벡터로부터 유클리드 거리가 가장 작은 마지막 은닉층에서 특징 벡터를 생성하는 6개의 훈련 이미지를 보여줍니다.</p>
 
