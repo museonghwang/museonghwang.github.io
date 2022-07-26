@@ -1,5 +1,5 @@
 ---
-title: ImageNet Classification with Deep Convolutional Neural Networks
+title: Visualizing and Understanding Convolutional Networks
 category: Classification Paper
 tag: classification-paper
 date: 2022-07-15
@@ -16,7 +16,9 @@ date: 2022-07-15
 
 # Abstract
 
-ImageNet LSVRC-2010 대회에서 120만 개의 high-resolution images를 1000개의 다른 클래스로 분류하기 위해 크고 깊은 convolutional network을 훈련했으며, test data에서 top-1 error rates 37.5% 및 top-5 error rates 17.0%를 달성하여 이전의 SOTA보다 상당히 개선되었습니다.
+Large Convolutional Network model은 최근 ImageNet 벤치마크에서 인상적인 분류 성능을 보여주었습니다(Krizhevsky et al., 2012). 그러나 model이 왜 그렇게 잘 작동하는지, 또는 어떻게 개선될 수 있는지에 대한 명확한 이해가 없습니다.
+
+이 논문에서 우리는 두 가지 문제를 다룹니다. 중간 feature layers의 기능과 classifier의 작동에 대한 insight를 제공하는 새로운 시각화 기법을 소개합니다. 진단 역할에 사용되는 이러한 시각화를 통해 ImageNet classification benchmark에서의 Krizhevsky et al을 능가하는 model architectures를 찾을 수 있습니다. 또한 다양한 model layers에서 성능 기여를 발견하기 위해 ablation study를 수행합니다. 우리는 우리의 ImageNet model이 다른 datasets에 잘 일반화되었음을 보여줍니다. softmax classifier가 retrained될 때, Caltech-101 및 Caltech-256 datasets에 대한 최신 SOTA 결과를 설득력 있게 능가합니다.
 
 
 
