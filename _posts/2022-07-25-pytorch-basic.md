@@ -2,7 +2,7 @@
 title: pytorch와 텐서 조작하기(Tensor Manipulation)
 category: Pytorch
 tag: pytorch
-date: 2022-07-26
+date: 2022-07-25
 ---     
 
 

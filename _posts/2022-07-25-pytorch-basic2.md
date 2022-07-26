@@ -2,7 +2,7 @@
 title: 자주 사용되는 pytorch 텐서 조작 함수(Tensor Manipulation Functions)
 category: Pytorch
 tag: pytorch
-date: 2022-07-26
+date: 2022-07-25
 ---     
 
 
