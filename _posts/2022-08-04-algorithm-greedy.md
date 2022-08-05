@@ -5,7 +5,7 @@ category: Algorithm
 tag: Algorithm
 ---
 
-해당 게시물은 [이것이 코딩 테스트다 with 파이썬](https://www.hanbit.co.kr/store/books/look.php?p_code=B8945183661)을 바탕으로 작성되었습니다.
+해당 게시물은 [이것이 코딩 테스트다 with 파이썬](https://www.hanbit.co.kr/store/books/look.php?p_code=B8945183661)을 바탕으로 언제든지 블로그에 들어와서 보기위해 작성되었습니다.
 
 
 
