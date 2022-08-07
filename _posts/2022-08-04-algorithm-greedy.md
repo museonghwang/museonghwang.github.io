@@ -352,24 +352,12 @@ $$int(M\ /\ (K\ +\ 1))\ *\ K\ +\ M\ \%\ (K\ +\ 1)$$
 ## My Solution
 
 ```py
-_, M, K = map(int, input().split())
-input_data = list(map(int, input().split()))
-
-input_data.sort(reverse=True)
-first_data = input_data[0] # 첫번째로 큰 수
-second_data = input_data[1] # 두번째로 큰 수
+N, _ = map(int, input().split())
 
 result = 0
-
-for m in range(M):
-    if m == 0:
-        result += first_data
-        continue
-    
-    if m % K == 0:
-        result += second_data
-    else:
-        result += first_data
+for i in range(N):
+    dummy = min(list(map(int, input().split())))
+    result = max(dummy, result)
 
 print(result)
 ```
@@ -469,7 +457,7 @@ N과 K가 주어질 때 N이 1이 될 때까지 1번 혹은 2번의 과정을 �
 n, k = map(int, input().split())
 
 result = 0
-while(1):
+while 1:
     if n == 1:
         break
     
