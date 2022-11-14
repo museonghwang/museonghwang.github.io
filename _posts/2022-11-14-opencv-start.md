@@ -9,6 +9,8 @@ tag: OpenCV
 
 <br>
 
+해당 게시물은 [파이썬으로 만드는 OpenCV 프로젝트(이세우 저)](https://github.com/dltpdn/insightbook.opencv_project_python/blob/master/README.md) 를 바탕으로 작성되었습니다.
+
 
 
 
