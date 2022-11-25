@@ -1,6 +1,6 @@
 ---
 layout: post
-title: OpenCV Image Processing 관심영역
+title: OpenCV Image Processing 컬러 스페이스
 category: OpenCV
 tag: OpenCV
 ---
