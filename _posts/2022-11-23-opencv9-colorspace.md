@@ -118,8 +118,6 @@ cv2.destroyAllWindows()
 default (120, 98, 3) color (120, 98, 3) unchanged (120, 98, 4)
 ```
 
-<br>
-
 <p align="center">
 <img alt="image" src="https://user-images.githubusercontent.com/77891754/203913446-809ecf17-6c17-4283-aa71-01c8b40cd42c.png">
 </p>
@@ -146,46 +144,26 @@ default (120, 98, 3) color (120, 98, 3) unchanged (120, 98, 4)
 
 ```py
 '''BGR을 그레이 스케일로 변환'''
-
-
 import cv2
-
 import numpy as np
 
-img = cv2.imread('../img/girl.jpg')
+img = cv2.imread('./img/wonyoung.jpg')
+img2 = img.astype(np.uint16)                # dtype 변경 ---①
 
-4.2 컬러 스페이스
+# b,g,r = img2[:,:,0], img2[:,:,1], img2[:,:,2]
+b,g,r = cv2.split(img2)                     # 채널 별로 분리 ---②
+gray1 = ((b + g + r)/3).astype(np.uint8)    # 평균 값 연산후 dtype 변경 ---③
+gray2 = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # BGR을 그레이 스케일로 변경 ---④
 
-117
+cv2.imshow('original', img)
+cv2.imshow('gray1', gray1)
+cv2.imshow('gray2', gray2)
 
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
 
-OpenCV
-
-img2
-
-= img.astype(np. uint16)
-
-b,g,r cv2.split(img2)
-
-gray1 = ((b + g + r)/3).astype(np.uint8)
-
-# dtype 변경 ---1
-
-# 채널별로 분리 --- 2
-
-# 평균값 연산 후 dtype 변경 ---3
-
-gray2 = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # BGR을 그레이 스케일로 변경 --- 4
-
-cv2.imshow('original', img) cv2. imshow 'gray1', gray1) cv2.imshow('gray2', gray2)
-
-cv2.waitKey(0) cv2.destroyAllWindows()
-
-(x-316, y-0)-R:74 072849 (x-399, y-74)-184
-
-[그림 4-10][예제 4-6]의 실행 결과
-
-[예제 4-6] 에서 코드 ①, ②, ③은 평균 값을 구하는 알고리즘을 직접 구현했고, 코드 ④는 OpenCV에서 제공하는 함수를 이용한 방법입니다. 코드 ①에서 dtype을 uint16 타입으로 변경한 이유는 원래의 dtype이 uint8인 경우 평균 값을 구하는 과정에서 3채널의 값을 합하면 255보다 큰 값이 나올 수 있으므로 unit16으로 변경해서 계산을 마치고 다시 코드 ③에서 uint8로 변경합니다. 코드 ②에서 사용한 cv2.split() 함수는 매개변수로 전달한 이미지를 채널별로 분리해서 튜플로 반환합니다. 이 코드는 아래와 같은 NumPy 슬라이싱과 동일합니다.
+코드 ①, ②, ③은 평균 값을 구하는 알고리즘을 직접 구현했고, 코드 ④는 OpenCV에서 제공하는 함수를 이용한 방법입니다. 코드 ①에서 dtype을 uint16 타입으로 변경한 이유는 원래의 dtype이 uint8인 경우 평균 값을 구하는 과정에서 3채널의 값을 합하면 255보다 큰 값이 나올 수 있으므로 unit16으로 변경해서 계산을 마치고 다시 코드 ③에서 uint8로 변경합니다. 코드 ②에서 사용한 `cv2.split()` 함수는 매개변수로 전달한 이미지를 채널별로 분리해서 튜플로 반환합니다. 이 코드는 아래와 같은 NumPy 슬라이싱과 동일합니다.
 
 b,g,r = img2[:,:, 0], img2[:,:,1], img2[:,:,2]
 
@@ -200,21 +178,19 @@ flag: 변환할 컬러 스페이스, cv2.COLOR_로 시작하는 이름(274개)
 
 Project
 
-• out = cv2.cvtColor(img, flag)
 
-.img: NumPy 배열, 변환할 이미지
 
-cv2.COLOR_BGR2GRAY: BGR 컬러 이미지를 그레이 스케일로 변환
-
-cv2.COLOR_GRAY2BGR: 그레이 스케일 이미지를 BGR 컬러 이미지로 변환
-
-cv2.COLOR_BGR2RGB: BGR 컬러 이미지를 RGB 컬러 이미지로 변환
-
-cv2.COLOR_BGR2HSV: BGR 컬러 이미지를 HSV 컬러 이미지로 변환
-
-cv2.COLOR_HSV2BGR: HSV 컬러 이미지를 BGR 컬러 이미지로 변환
-
-cv2.COLOR_BGR2YUV: BGR 컬러 이미지를 YUV 컬러 이미지로 변환cv2.COLOR_YUV2BGR: YUV 컬러 이미지를 BGR 컬러 이미지로 변환out: 변환한 결과 이미지(NumPy 배열)
+* `out = cv2.cvtColor(img, flag)`
+    * `img` : NumPy 배열, 변환할 이미지
+    * `flag` : 변환할 컬러 스페이스, `cv2.COLOR_` 로 시작하는 이름(274개)
+        * `cv2.COLOR_BGR2GRAY` : BGR 컬러 이미지를 그레이 스케일로 변환
+        * `cv2.COLOR_GRAY2BGR` : 그레이 스케일 이미지를 BGR 컬러 이미지로 변환
+        * `cv2.COLOR_BGR2RGB` : BGR 컬러 이미지를 RGB 컬러 이미지로 변환
+        * `cv2.COLOR_BGR2HSV` : BGR 컬러 이미지를 HSV 컬러 이미지로 변환
+        * `cv2.COLOR_HSV2BGR` : HSV 컬러 이미지를 BGR 컬러 이미지로 변환
+        * `cv2.COLOR_BGR2YUV` : BGR 컬러 이미지를 YUV 컬러 이미지로 변환
+        * `cv2.COLOR_YUV2BGR` : YUV 컬러 이미지를 BGR 컬러 이미지로 변환
+    * `out` : 변환한 결과 이미지(NumPy 배열)
 
 컬러 스페이스 변환에 사용할 수 있는 플래그 상수는 2백여 개가 넘는데, 여기에 모두 다 기재하는 것은 의미가 없으므로 그들 중 중요하고 이 책에서 다루는 것들만 추려서 표시했습니다. 모든 상수는 이름이 cv2.COLOR_로 시작하므로 문서에서 쉽게 찾아볼 수 있을 것입니다. 파이썬 콘솔에서 아래의 코드를 실행해도 모든 플래그 상수를 출력해서 볼 수 있습니다.
 
