@@ -161,8 +161,8 @@ code {
 }
 pre {
   display: block;
-  overflow-x: scroll; /*변동*/
-  max-width: 200%;
+  overflow-x: auto;
+  max-width: 1600px; /*변동*/
   margin-top: 0;
   margin-bottom: 1rem;
   padding: 1rem;
