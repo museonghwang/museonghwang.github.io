@@ -206,456 +206,519 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 ```
 
-import cv2 import numpy as np
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204094616-df0e8fa5-d96c-4d39-8514-9449a8ffb744.png">
+</p>
 
-alpha = 0.5 # 합성에 사용할 알파 값
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204094630-d04834b9-efc1-4520-88fe-a172c0b69925.png">
+</p>
 
-# 합성에 사용할 영상 읽기 --- 1img1 = cv2.imread('../img/wing_wall.jpg')img2 = cv2.imread('../img/yate.jpg')
+위 코드 ②는 앞서 수식으로 나타낸 알파 블렌딩을 NumPy 배열에 직접 적용하였고, 코드 ③은 `cv2.addWeighted()` 함수로 적용해서 같은 결과를 가져오는 것을 보여주고 있습니다.
 
-# 수식을 직접 연산해서 알파 블렌딩 적용 ---(2) blended = img1 * alpha + img2*(1-alpha) blended blended.astype(np.uint8) # 소수점 발생을 제거하기 위함 cv2.imshow('img1 * alpha + img2 * (1-alpha)', blended)
+아래의 코드는 남자의 얼굴과 사자의 얼굴을 알파 블렌딩하는 데 트랙바로 알파 값을 조정할 수 있게 했습니다. 트랙바를 움직여서 알파 값을 조정하면 마치 사람이 서서히 사자로 바뀌는 것처럼 보입니다. **알파 블렌딩은 흔히 페이드-인/아웃(fade-in/out) 기법으로 영상이 전환되는 장면에서 자주 사용**되며, 《구미호》나 《늑대인간》 같은 영화의 **변신 장면에서 얼굴 모핑(face morphing)이라는 기법으로 효과를 내는데, 이 기법을 구성하는 한 가지 기술이기도 합니다.**
 
-# addWeighted()함수로 알파 블렌딩 적용 ---(3) dst = cv2.addWeighted(img1, alpha, img2, (1-alpha), 0) cv2.imshow('cv2.addWeighted', dst)
+```py
+'''트랙바로 알파 블렌딩'''
+import cv2
+import numpy as np
 
-cv2.waitKey(0) cv2.destroyAllWindows()
+win_name = 'Alpha blending'     # 창 이름
+trackbar_name = 'fade'          # 트렉바 이름
 
-4.4 이미지 연산
+# ---① 트렉바 이벤트 핸들러 함수
+def onChange(x):
+    alpha = x/100
+    dst = cv2.addWeighted(img1, 1-alpha, img2, alpha, 0) 
+    cv2.imshow(win_name, dst)
 
-●
+# ---② 합성 영상 읽기
+img1 = cv2.imread('./img/man_face.jpg')
+img2 = cv2.imread('./img/lion_face.jpg')
 
-137
-
-
-OpenCV
-
-[그림 4-20] [예제 4-16]의 실행 결과
-
-[예제 4-16]의 코드 ②는 앞서 수식으로 나타낸 알파 블렌딩을 NumPy 배열에 직접 적용하였고, 코드 ③은 cv2.addWeighted() 함수로 적용해서 같은 결과를 가져오는 것을 보여주고 있습니다.
-
-아래의 [예제 4-17]은 남자의 얼굴과 사자의 얼굴을 알파 블렌딩하는 데 트랙바로 알파 값을 조정할 수 있게 했습니다. 트랙바를 움직여서 알파 값을 조정하면 마치 사람이 서서히 사자로 바뀌는 것처럼 보입니다. 알파 블렌딩은 흔히 페이드-인/아웃(fade-in/out) 기법으로 영상이 전환되는 장면에서 자주 사용되며, <구미호》나 《늑대인간》 같은 영화의 변신 장면에서 얼굴 모핑(face morphing)이라는 기법으로 효과를 내는데, 이 기법을 구성하는 한 가지 기술이기도 합니다.
-
-[예제 4-17] 트랙바로 알파 블렌딩(blending_alpha_trackbar.py)
-
-import cv2 import numpy as np win_name = 'Alpha blending' trackbar_name = 'fade' #트랙바 이벤트 핸들러 함수 def onChange(x): alpha = x/100 dst = cv2.addweighted(img1, 1-alpha, img2, alpha, 0) cv2.imshow(win_name, dst) # 창 이름 #트랙바 이름
-
-# 합성 영상 읽기
-
-img1 = cv2.imread('../img/man_1 face.jpg')
-
-img2 = cv2.imread('../img/lion_face.jpg')
-
-2 사진 출처: http://pixabay.com
-
-4장 이미지 프로세싱 기초
-
-138
-
-
-# 이미지 표시 및 트랙바 붙이기
-
+# ---③ 이미지 표시 및 트렉바 붙이기
 cv2.imshow(win_name, img1)
-
 cv2.createTrackbar(trackbar_name, win_name, 0, 100, onChange)
 
-cv2.waitKey() cv2.destroyAllWindows()
+cv2.waitKey()
+cv2.destroyAllWindows()
+```
 
-1046100
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204095271-5faa8841-c355-4b5a-95d8-a269046ec821.png">
+</p>
 
-[그림 4-21] [예제 4-17]의 실행 결과
+값으로 직접 비교하면 다음과 같습니다.
 
-4.4.3 비트와이즈 연산
 
-OpenCV는 두 영상의 각 픽셀에 대한 비트와이즈(bitwise, 비트 단위) 연산 기능을 제공합니다. 비트와이즈 연산은 영상을 합성할 때 특정 영역만 선택하거나 특정 영역만 제외하는 등의 선별적인 연산에 도움이 됩니다. OpenCV에서 제공하는 비트와이즈 연산 함수는 다음과 같습니다.
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204095259-c51cfc10-2793-4f72-af8e-0753296c6e81.png">
+</p>
 
-0●.bitwise_and(img1, img2, mask=None): 각 픽셀에 대해 비트와이즈 AND 연산 bitwise_or(img1, img2, mask=None) : 각 픽셀에 대해 비트와이즈 OR 연산 bitwise_xor(img1, img2, mask=None): 각 픽셀에 대해 비트와이즈 XOR 연산
+<br>
 
-bitwise_not(img1, mask=None): 각 픽셀에 대해 비트와이즈 NOT 연산
 
-img1, img2: 연산 대상 영상, 동일한 shape
 
-• mask: 0이 아닌 픽셀만 연산, 바이너리 이미지
+## 3. 비트와이즈 연산
 
-[예제 4-18] 비트와이즈 연산(bitwise.py)
+**OpenCV는 두 영상의 각 픽셀에 대한 비트와이즈(bitwise, 비트 단위) 연산 기능을 제공**합니다. **비트와이즈 연산은 영상을 합성할 때 특정 영역만 선택하거나 특정 영역만 제외하는 등의 선별적인 연산에 도움이 됩니다.** OpenCV에서 제공하는 비트와이즈 연산 함수는 다음과 같습니다.
 
+* `bitwise_and(img1, img2, mask=None)` : 각 픽셀에 대해 비트와이즈 AND 연산
+* `bitwise_or(img1, img2, mask=None)` : 각 픽셀에 대해 비트와이즈 OR 연산
+* `bitwise_xor(img1, img2, mask=None)` : 각 픽셀에 대해 비트와이즈 XOR 연산
+* `bitwise_not(img1, mask=None)` : 각 픽셀에 대해 비트와이즈 NOT 연산
+    * `img1, img2` : 연산 대상 영상, 동일한 shape
+    * `mask` : 0이 아닌 픽셀만 연산, 바이너리 이미지
+
+```py
+'''비트와이즈 연산'''
 import numpy as np, cv2
-
 import matplotlib.pylab as plt
 
-# 연산에 사용할 이미지 생성 img1 = np.zeros((200,400), dtype=np.uint8)dtype=np.uint8)img2 = np.zeros(( 200,400), img1[:, : 200] = 255img2(100:200, :) = 255# 왼쪽은 검은색 (0), 오른쪽은 흰색 (255)# 위쪽은 검은색 (0), 아래쪽은 흰색 (255)
+#--① 연산에 사용할 이미지 생성
+img1 = np.zeros(( 200,400 ), dtype=np.uint8)
+img2 = np.zeros(( 200,400 ), dtype=np.uint8)
+img1[:, :200] = 255         # 왼쪽은 흰색(255), 오른쪽은 검정색(0)
+img2[100:200, :] = 255      # 위쪽은 검정색(0), 아래쪽은 흰색(255)
 
-# 비트와이즈 연산
+#--② 비트와이즈 연산
+bitAnd = cv2.bitwise_and(img1, img2)
+bitOr = cv2.bitwise_or(img1, img2)
+bitXor = cv2.bitwise_xor(img1, img2)
+bitNot = cv2.bitwise_not(img1)
 
-4.4 이미지 연산
-
-Project
-
-139
-
-
-bitAnd = cv2.bitwise_and(img1, img2) bitOr = cv2.bitwise_or(img1, img2) bitor = cv2.bitwise_xor(img1, img2) bitNot = cv2.bitwise_not (img1)
-
-# Plot으로 결과 출력 imgs {'img1':img1, 'img2'img2, 'and':bitAnd, 'or':bitOr, 'xor':bitXor, 'not(img1)':bitNot} for i, (title, img) in enumerate(imgs.items()); plt.subplot(3,2,i+1) plt.title(title) plt.imshow(img, 'gray') plt.xticks([]); plt.yticks([])
+#--③ Plot으로 결과 출력
+imgs = {'img1':img1, 'img2':img2, 'and':bitAnd, 
+          'or':bitOr, 'xor':bitXor, 'not(img1)':bitNot}
+for i, (title, img) in enumerate(imgs.items()):
+    plt.subplot(3,2,i+1)
+    plt.title(title)
+    plt.imshow(img, 'gray')
+    plt.xticks([]); plt.yticks([])
 
 plt.show()
+```
 
-img1 and xor img2 or not(img1)
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204095401-adec7208-f398-4736-9c7d-08b7759413c6.png">
+</p>
 
-[그림 4-22] [예제 4-18]의 실행 결과
+위 예제의 실행 결과를 보면 이해하기 쉬울 것입니다. img1은 좌우로, img2는 위아래로 0과 255로 나누어 200 × 400 크기의 영상을 생성했습니다. 이 두 영상에 대해서 각각 비트와이즈 연산을 한 결과입니다. `cv2.bitwise_and()` 연산은 두 영상에서 0으로 채워진 부분이 만나는 부분은 모두 0으로 채워졌습니다. `cv2.bitwise_or()` 연산은 두 영상에서 255로 채워진 부분은 모두 255로 채워졌습니다. `cv2.bitwise_xor()` 연산은 두 영상에서 서로 다른 값을 가진 부분은 255로, 서로 같은 값을 가진 부분은 0으로 채워졌습니다. img1에 대한 `cv2.bitwise_not()` 연산은 원래의 반대의 결과를 갖습니다.
 
-위 [예제 4-18]의 실행 결과를 보면 이해하기 쉬울 것입니다. img1은 좌우로, img2는위아래로 0과 255로 나누어 200 × 400 크기의 영상을 생성했습니다. 이 두 영상에대해서 각각 비트와이즈 연산을 한 결과입니다. cv2.bitwise_and() 연산은 두 영상에서 0으로 채워진 부분이 만나는 부분은 모두 0으로 채워졌습니다. cv2.bitwise_or() 연산은 두 영상에서 255로 채워진 부분은 모두 255로 채워졌습니다. cv2.
+다음 코드는 비트와이즈 연산으로 영상의 일부분을 원하는 모양으로 떼내는 예제입니다.
 
-4장 이미지 프로세싱 기초
+```py
+'''bitwise_and 연산으로 마스킹하기'''
+import numpy as np, cv2
+import matplotlib.pylab as plt
 
-OpenCV
+#--① 이미지 읽기
+img = cv2.imread('./img/wonyoung.jpg')
 
-140
+#--② 마스크 만들기
+mask = np.zeros_like(img)
+cv2.circle(mask, (220,270), 150, (255,255,255), -1)
+#cv2.circle(대상이미지, (원점x, 원점y), 반지름, (색상), 채우기)
+
+#--③ 마스킹
+masked = cv2.bitwise_and(img, mask)
+
+#--④ 결과 출력
+cv2.imshow('original', img)
+cv2.imshow('mask', mask)
+cv2.imshow('masked', masked)
+cv2.waitKey()
+cv2.destroyAllWindows()
+```
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204095592-c5f18cda-f833-47b2-90f7-b197fa0131cf.png">
+</p>
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204095598-2f5c8877-1673-455a-a36c-d6906a4ff4c9.png">
+</p>
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204095612-0287cc11-09e6-45d0-a0cf-fe00a32faf1b.png">
+</p>
+
+위 코드 ②에서 원본 이미지와 동일한 shape의 O(zero)으로 채워진 배열을 만들고 원하는 위치에 (255,255,255)로 채워진 원을 그립니다. 이렇게 생성된 배열은 원을 제외한 나머지 영역은 모두 O(zero)으로 채워져 있고, 원은 모든 비트가 1로 채워져 있는 255입니다. 코드 ③에서는 이 영상과 원본 영상을 `cv2.bitwise_and()` 연산으로 원 이외의 부분을 모두 0으로 채워서 원하는 영역만 떼어낼 수 있습니다.
+
+예제에서는 마스킹하기 위해 코드 ②에서 원본 영상과 똑같은 3채널 배열을 만들었지만, 비트와이즈 연산 함수의 세 번째 인자인 mask를 이용하면 2차원 배열만으로도 가능합니다.
+
+```py
+#--② 마스크 만들기
+mask = np.zeros(img.shape[:2], dtype=np.uint8)
+cv2.circle(mask, (220,270), 150, (255), -1)
+#cv2.circle(대상이미지, (원점x, 원점y), 반지름, (색상), 채우기)
+
+#--③ 마스킹
+masked = cv2.bitwise_and(img, img, mask=mask)
+```
+
+<br>
 
 
-Project
 
-bitwise_xor() 연산은 두 영상에서 서로 다른 값을 가진 부분은 255로, 서로 같은 값을 가진 부분은 0으로 채워졌습니다. img1에 대한 cv2.bitwise_not() 연산은 원래의반대의 결과를 갖습니다.
+## 4. 차영상
 
-[예제 4-19]는 비트와이즈 연산으로 영상의 일부분을 원하는 모양으로 떼내는 예제입니다.
+**영상에서 영상을 빼기 연산하면 두 영상의 차이, 즉 변화를 알 수 있는데,** 이것을 **차영상(image differencing)**이라고 합니다. 심심풀이로 한 번쯤은 해봤을 법한 틀린 그림 찾기 놀이는 차영상으로 손쉽게 답을 찾을 수 있습니다. 놀이뿐만 아니라 산업현장에서 도면의 차이를 찾거나 전자제품의 PCB(Printable Circuit Board) 회로의 오류를 찾는 데도 사용할 수 있고, 카메라로 촬영한 영상에 실시간으로 움직임이 있는지를 알아내는 데도 유용합니다.
 
-[예제 4-19] bitwise_and 연산으로 마스킹하기(bitwise_masking.py)
+**차영상을 구할 때 두 영상을 무턱대고 빼기 연산하면 음수가 나올 수 있으므로 절대 값을 구해야 합니다.** 아래는 OpenCV에서 제공하는 절대 값의 차를 구하는 함수입니다.
 
-import numpy as np, cv2 import matplotlib.pylab as plt
+* `diff` = cv2.absdiff(img1, img2)
+    * `img1, img2` : 입력 영상
+    * `diff` : 두 영상의 차의 절대 값 반환
 
-# 이미지 읽기 --①img = cv2.imread('../img/girl.jpg')
+다음 코드는 사람의 눈으로 찾기 힘든 두 도면의 차이를 찾아 표시합니다.
 
-# 마스크 만들기 -- 2mask = np.zeros_like(img)cv2.circle(mask, (150,140), 100, (255,255,255), -1)# cv2.circle(대상 이미지, (원점x, 원점y), 반지름, (색상),채우기)
-
-# 마스킹 --③ masked = cv2.bitwise_and(img, mask)
-
-# 결과 출력 --④ cv2.imshow('original', img) cv2.imshow('mask', mask) cv2.imshow('masked', masked) cv2.waitKey() cv2.destroyAllWindows()
-
-0-300, y-251) - R212 0.202 6227ADVA(-216 -1)-ROGOBO[그림 4-23] [예제 4-19]의 실행 결과06-276. yu149) - 200080
-
-[예제 4-19] 코드 ②에서 원본 이미지와 동일한 shape의 O(zero)으로 채워진 배열을 만들고 원하는 위치에 (255,255,255)로 채워진 원을 그립니다. 이렇게 생성된 배열은 원을 제외한 나머지 영역은 모두 O(zero)으로 채워져 있고, 원은 모든 비트가1로 채워져 있는 255입니다. 코드 ③에서는 이 영상과 원본 영상을 cv2.bitwise_and() 연산으로 원 이외의 부분을 모두 0으로 채워서 원하는 영역만 떼어낼 수 있습니다.
-
-4.4 이미지 연산
-
-141
-
-
-[예제 4-19]에서는 마스킹하기 위해 코드 ②에서 원본 영상과 똑같은 3채널 배열을 만들었지만, 비트와이즈 연산 함수의 세 번째 인자인 mask를 이용하면 2차원 배열만으로도 가능합니다.
-
-다음 코드는 [예제 4-19]의 코드 ②와 ③ 부분만 다시 작성한 코드입니다.
-
-# -- 2 마스크 만들기 mask = np.zeros(img.shape[:2], dtype=np.uint8) # cv2.circle (대상이미지, (원점, 원점y), 반지름 (색상), 채우기) cv2.circle(mask, (150,140), 100, (255), -1)
-
-# --3 마스킹 masked = cv2.bitwise_and(img, img, mask=mask)
-
-4.4.4 차영상
-
-영상에서 영상을 빼기 연산하면 두 영상의 차이, 즉 변화를 알 수 있는데, 이것을 차영상(image differencing)이라고 합니다. 심심풀이로 한 번쯤은 해봤을 법한 틀린 그림 찾기 놀이는 차영상으로 손쉽게 답을 찾을 수 있습니다. 놀이뿐만 아니라 산업현장에서 도면의 차이를 찾거나 전자제품의 PCB(Printable Circuit Board) 회로의 오류를 찾는 데도 사용할 수 있고, 카메라로 촬영한 영상에 실시간으로 움직임이 있는지를 알아내는 데도 유용합니다.
-
-차영상을 구할 때 두 영상을 무턱대고 빼기 연산하면 음수가 나올 수 있으므로 절대 값을 구해야 합니다. 아래는 OpenCV에서 제공하는 절대 값의 차를 구하는 함수입니다.
-
-diff = cv2.absdiff(img1, img2)
-
-img1, img2: 입력 영상
-
-diff: 두 영상의 차의 절대 값 반환 ●
-
-[예제 4-20]은 사람의 눈으로 찾기 힘든 두 도면의 차이를 찾아 표시합니다.
-
-[예제 4-20] 차영상으로 도면의 차이 찾아내기(diff_absolute.py)
-
+```py
+'''차영상으로 도면의 차이 찾아내기'''
 import numpy as np, cv2
 
-# 연산에 필요한 영상을 읽고 그레이 스케일로 변환 --① img1 = cv2.imread('./img/robot_arm1.jpg') img2 = cv2.imread('../img/robot_arm2.jpg') img1_gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY) img2_gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+#--① 연산에 필요한 영상을 읽고 그레이스케일로 변환
+img1 = cv2.imread('./img/robot_arm1.jpg')
+img2 = cv2.imread('./img/robot_arm2.jpg')
+img1_gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+img2_gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
-4장 이미지 프로세싱 기초
+#--② 두 영상의 절대값 차 연산
+diff = cv2.absdiff(img1_gray, img2_gray)
 
-OpenCV
+#--③ 차 영상을 극대화 하기 위해 쓰레시홀드 처리 및 컬러로 변환
+_, diff = cv2.threshold(diff, 1, 255, cv2.THRESH_BINARY)
+diff_red = cv2.cvtColor(diff, cv2.COLOR_GRAY2BGR)
+diff_red[:,:,2] = 0
 
-142
+#--④ 두 번째 이미지에 변화 부분 표시
+spot = cv2.bitwise_xor(img2, diff_red)
+
+#--⑤ 결과 영상 출력
+cv2.imshow('img1', img1)
+cv2.imshow('img2', img2)
+cv2.imshow('diff', diff)
+cv2.imshow('spot', spot)
+cv2.waitKey()
+cv2.destroyAllWindows()
+```
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204096169-77653650-9206-4129-afa8-3179924fa579.png">
+</p>
+
+코드 ①은 연산에 필요한 두 영상을 읽어서 그레이 스케일로 변환합니다. 코드 ②에서 그레이 스케일로 변환된 두 영상의 차영상을 구합니다. 그 차이를 극대화해서 표현하기 위해 코드 ③에서는 1보다 큰 값은 모두 255로 바꾸고 색상을 표현하기 위해 컬러 스케일로 바꿉니다. 코드 ④는 원본 이미지의 어느 부분이 변경되었는지 표시해 주기 위해서 `cv2.bitwise_xor()` 연산을 합니다. 원본 이미지는 배경이 흰색이므로 255를 가지고 있고 차영상은 차이가 있는 빨간색 영역을 제외하고는 255이므로 XOR 연산을 하면 서로 다른 영역인 도면의 그림과 빨간색으로 표시된 차영상 부분이 합성됩니다.
+
+<br>
 
 
-Project
 
-# 두 영상의 절대 값 차 연산 -- 2diff = cv2.absdiff(img1_gray, img2_gray)
+## 5. 이미지 합성과 마스킹
 
-# 차 영상을 극대화하기 위해 스레시홀드 처리 및 컬러로 변환 -- (3) diff = cv2.threshold(diff, 1,255, cv2.THRESH_BINARY > diff_red = cv2.cvtColor(diff, cv2.COLOR_GRAY2BGR) diff_red:,:,2] = 0
+두 개 이상의 영상에서 특정 영역끼리 합성하기 위해서는 전경이 될 영상과 배경이될 영상에서 합성하고자 하는 영역만 떼어내는 작업과 그것을 합하는 작업으로 나눌수 있습니다. 여기서 **원하는 영역만을 떼어내는 데 꼭 필요한 것이 마스크(mask)**입니다. 사람이 좌표를 입력하지 않고 정교한 마스크를 만드는 작업은 결코 쉽지 않습니다. 사실 원하는 영역을 배경에서 떼어내는 작업은 객체 인식과 분리라는 컴퓨터 비전 분야의 정점과도 같다고 볼 수 있습니다.
 
-# 두 번째 이미지에 변화 부분 표시 -- 4spot = cv2.bitwise_xor(img2, diff_red)
+여기서는 우선 배경이 투명한 알파 채널 영상을 이용해서 영상을 합성해 봅니다. 배경이 투명한 영상은 4개 채널 중 마지막 채널은 배경에 해당하는 영역은 0 값을, 전경에 해당하는 영역은 255 값을 갖습니다. 이것을 이용하면 손쉽게 마스크를 만들 수 있습니다. 마스크를 이용해서 전경과 배경을 오려내는 것은 앞서 살펴본 `cv2.bitwise_and()` 연산을 이용하면 쉽습니다.
 
-# 결과 영상 출력 -- 5) cv2.imshow( 'img1', img1) cv2.imshow('img2', img2) cv2.imshow('diff', diff) cv2.imshow('spot', spot) cv2.waitKey() cv2.destroyAllWindows()
-
-0 1 1 (xm477,y181) ~R:163 G:163 B:163 ((x₩465, y-O) - L.O 10 (0 0 0 (x=99. y=316) A255 G-2558:255 0 (1 L LNC (x480, 11) ~R.255 G:255 B255 Spot
-
-[그림 4-24] [예제 4-20]의 실행 결과
-
-위 [예제 4-20]의 코드 ①은 연산에 필요한 두 영상을 읽어서 그레이 스케일로 변환합니다. 코드 ②에서 그레이 스케일로 변환된 두 영상의 차영상을 구합니다. 그 차이를
-
-4.4 이미지 연산
-
-143
-
-
-OpenCV
-
-극대화해서 표현하기 위해 코드 ③에서는 1보다 큰 값은 모두 255로 바꾸고 색상을표현하기 위해 컬러 스케일로 바꿉니다. 코드 ④는 원본 이미지의 어느 부분이 변경되었는지 표시해 주기 위해서 cv2.bitwise_xor() 연산을 합니다. 원본 이미지는 배경이 흰색이므로 255를 가지고 있고 차영상은 차이가 있는 빨간색 영역을 제외하고는 255이므로 XOR 연산을 하면 서로 다른 영역인 도면의 그림과 빨간색으로 표시된차영상 부분이 합성됩니다.
-
-4.4.5 이미지 합성과 마스킹
-
-두 개 이상의 영상에서 특정 영역끼리 합성하기 위해서는 전경이 될 영상과 배경이될 영상에서 합성하고자 하는 영역만 떼어내는 작업과 그것을 합하는 작업으로 나눌수 있습니다. 여기서 원하는 영역만을 떼어내는 데 꼭 필요한 것이 마스크(mask)입니다. 사람이 좌표를 입력하지 않고 정교한 마스크를 만드는 작업은 결코 쉽지 않습니다. 이것을 원하는 대로 하려면 앞으로 다뤄야 할 주제가 무척 많습니다. 사실 원하는 영역을 배경에서 떼어내는 작업은 객체 인식과 분리라는 컴퓨터 비전 분야의정점과도 같다고 볼 수 있습니다.
-
-여기서는 우선 배경이 투명한 알파 채널 영상을 이용해서 영상을 합성해 봅니다.4.2절 “컬러 스페이스"에서 살펴본 것처럼 배경이 투명한 영상은 4개 채널 중 마지막 채널은 배경에 해당하는 영역은 0 값을, 전경에 해당하는 영역은 255 값을 갖습니다. 이것을 이용하면 손쉽게 마스크를 만들 수 있습니다. 마스크를 이용해서 전경과배경을 오려내는 것은 앞서 살펴본 cv2.bitwise_and() 연산을 이용하면 쉽습니다.
-
-[예제 4-21] 투명 배경 PNG 파일을 이용한 합성(addtion_rgba_mask.py)
-
+```py
+'''투명 배경 PNG 파일을 이용한 합성'''
 import cv2
-
 import numpy as np
 
-# 합성에 사용할 영상 읽기, 전경 영상은 4채널 png 파일
+#--① 합성에 사용할 영상 읽기, 전경 영상은 4채널 png 파일
+img_fg = cv2.imread('./img/opencv_logo.png', cv2.IMREAD_UNCHANGED)
+img_bg = cv2.imread('./img/wonyoung.jpg')
 
-img_fg = cv2.imread('../img/opencv_logo.png', cv2.IMREAD_UNCHANGED)
-
-img_bg cv2.imread('../img/girl.jpg')
-
-# 알파 채널을 이용해서 마스크와 역마스크 생성
-
-mask = cv2.threshold(img_fg(:,:,3], 1, 255, cv2.THRESH_BINARY)
-
+#--② 알파채널을 이용해서 마스크와 역마스크 생성
+_, mask = cv2.threshold(img_fg[:,:,3], 1, 255, cv2.THRESH_BINARY)
 mask_inv = cv2.bitwise_not(mask)
 
-# 전경 영상 크기로 배경 영상에서 ROI 잘라내기
-
+#--③ 전경 영상 크기로 배경 영상에서 ROI 잘라내기
 img_fg = cv2.cvtColor(img_fg, cv2.COLOR_BGRA2BGR)
+h, w = img_fg.shape[:2]
+roi = img_bg[10:10+h, 10:10+w]
 
-h, w = img_fg.shape [:2]
+#--④ 마스크 이용해서 오려내기
+masked_fg = cv2.bitwise_and(img_fg, img_fg, mask=mask)
+masked_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
 
-roi = img_bg (10:10+h, 10:10+w ]
+#--⑥ 이미지 합성
+added = masked_fg + masked_bg
+img_bg[10:10+h, 10:10+w] = added
 
-4장 이미지 프로세싱 기초
+cv2.imshow('mask', mask)
+cv2.imshow('mask_inv', mask_inv)
+cv2.imshow('masked_fg', masked_fg)
+cv2.imshow('masked_bg', masked_bg)
+cv2.imshow('added', added)
+cv2.imshow('result', img_bg)
+cv2.waitKey()
+cv2.destroyAllWindows() 
+```
 
-144
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204097684-9c1c2f13-2ba5-4aba-814e-e339dea8c0b8.png">
+</p>
 
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204097695-d2464c25-2e03-4fab-8a8a-f42cf7d7a438.png">
+</p>
 
-# 마스크 이용해서 오려내기 masked_fg = cv2.bitwise_and(img_fg, img_fg, mask=mask) masked_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204097700-c42650cd-fcde-4510-82d1-3d9180da9f9d.png">
+</p>
 
-Project -
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204097710-a1d03e75-4c30-47a6-aaa4-ca5e137818b7.png">
+</p>
 
-# 이미지 합성 added = masked_fg + masked_bg img_bg[10:10+h, 10:10+w] = added
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204097716-8a71a06a-7163-4c17-94c2-2fdf9e8f33cf.png">
+</p>
 
-cv2.imshow('mask', mask) cv2.imshow('mask_inv', mask_inv) cv2.imshow('masked_fg', masked_fg) cv2.imshow('masked_bg', masked_bg) cv2.imshow('added', added) cv2.imshow('result', img_bg ) cv2.waitKey() cv2.destroyAllWindows()
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204097720-9d8e43d0-f80c-4018-b8dc-14b98d188adf.png">
+</p>
 
-C OpenCV (x=402, y=65) ~R:142 G:130 B:92 result added 2 OpenCV mask OpenCV |(x=61, y=1) ~ L:0 mask inv masked... 8 8 & OpenCV (x=81, y=1) ~R:67G:94 (x=11, y=2) - L:255 (x=14, y=97) - R:0 G:0 (x=89, y=115) ~R:0 G: masked....
+위 코드는 배경이 투명한 OpenCV 로고 이미지를 사진과 합성하고 있습니다. 로고 이미지의 네 번째 채널이 배경과 전경을 분리할 수 있는 마스크 역할을 해주므로 앞서 설명한 몇 가지 함수의 조합만으로 손쉽게 이미지를 합성할 수 있습니다.
 
-[그림 4-25] [예제 4-21]의 실행 결과
+모양에 따라 영역을 떼어내려는 경우도 있지만, 색상에 따라 영역을 떼어내야 하는 경우도 있습니다. 이때는 색을 가지고 마스크를 만들어야 하는데, HSV로 변환하면 원하는 색상 범위의 것만 골라낼 수 있습니다. OpenCV는 특정 범위에 속하는지를 판단할 수 있는 함수를 아래와 같이 제공합니다. 이것을 이용하면 특정 범위 값을 만족하는 마스크를 만들기 쉽습니다.
 
-[예제 4-21]은 배경이 투명한 OpenCV 로고 이미지를 소녀의 사진과 합성하고 있습니다. 로고 이미지의 네 번째 채널이 배경과 전경을 분리할 수 있는 마스크 역할을 해주므로 앞서 설명한 몇 가지 함수의 조합만으로 손쉽게 이미지를 합성할 수 있습니다.
+* `dst = cv2.inRange(img, from, to)` : 범위에 속하지 않은 픽셀 판단
+    * `img` : 입력 영상
+    * `from` : 범위의 시작 배열
+    * `to` : 범위의 끝 배열
+    * `dst` : ing가 from ~ to에 포함되면 255, 아니면 0을 픽셀 값으로 하는 배열
 
-모양에 따라 영역을 떼어내려는 경우도 있지만, 색상에 따라 영역을 떼어내야 하는 경우도 있습니다. 이때는 색을 가지고 마스크를 만들어야 하는데, 4.2절 “컬러 스페이스"에서 다룬 HSV로 변환하면 원하는 색상 범위의 것만 골라낼 수 있습니다. OpenCV는 특정 범위에 속하는지를 판단할 수 있는 함수를 아래와 같이 제공합니다. 이것을 이용하면 특정 범위 값을 만족하는 마스크를 만들기 쉽습니다.
+다음 코드는 컬러 큐브에서 색상별로 추출하는 예제입니다.
 
-4.4 이미지 연산
-
-145
-
-
-● dst = cv2.inRange(img, from, to): 40g
-
-img: 입력 영상●
-
-from: 범위의 시작 배열.
-
-to: 범위의 끝 배열.
-
-dst: ing가 from ~ to에 포함되면 255, 아니면 0을 픽셀 값으로 하는 배열
-
-[예제 4-22]는 컬러 큐브에서 색상별로 추출하는 예제입니다.
-
-[04-22] HSV (hsv_color_mask.py)
-
+```py
+'''HSV 색상으로 마스킹'''
 import cv2
-
-import numpy as np import matplotlib.pylab as plt
-
-# 큐브 영상을 읽어서 HSV로 변환 --① img cv2.imread ("../img/cube.jpg") hsv cv2.cvt Color (img, cv2. COLOR_BGR2HSV)
-
-# 색상별 영역 지정 -- 2 blue1= np.array( [90, 50, 50]) blue2= np.array([120, 255,255]) green1 = np.array( [45, 50,50]) green2 = np.array( [75, 255, 255]) red1= np.array([0, 50,50]) red2 = np.array([15, 255, 255]) red3= np.array ( [165, 50,50]) red4 = np.array( [180, 255, 255]) yellow1 = np.array([20, 50,50]) yellow2 = np.array([35, 255,255])
-
-# 색상에 따른 마스크 생성 --3 mask_blue cv2.inRange (hsv, bluel, blue2) mask_green= cv2.inRange (hsv, green1, green2) mask_red= cv2.inRange (hsv, red1, red2) mask_red2 = cv2.inRange (hsv, red3, red4) mask_yellow cv2.inRange (hsv, yellowl, yellow2) =
-
-# 색상별 마스크로 색상만 추출 -- 4 res_blue = cv2.bitwise_and (img, img, mask=mask_blue) res_green= cv2.bitwise_and (img, img, mask=mask_green) res_red1= cv2. bitwise_and (img, img, mask=mask_red) res_red2 = cv2.bitwise_and (img, img, mask=mask_red2) res_red= cv2.bitwise_or(res_red1, res_red2) res_yellow = cv2.bitwise_and (img, img, mask=mask_yellow)
-
-# 결과 출력
-
-4장 이미지 프로세싱 기초
-
-●
-
-- OpenCV
-
-146
-
-
-imgs = {'original': img, 'blue':res_blue, 'green':res_green,
-
-'red':res_red, 'yellow':res_yellow}
-
-Project -
-
-for i, (k, v) in enumerate(imgs.items()):
-
-plt.subplot(2,3, i+1) plt.title(k)
-
-plt.imshow(v[:,:,::-1])
-
-plt.xticks([]); plt.yticks([])
-
-plt.show()
-
-original red +Q Figure 1 blue yellow green
-
-[그림 4-26] [예제 4-22]의 실행 결과
-
-[예제 4-22]의 코드 ②에서 지정한 색상별 영역은 4.2절 “컬러 스페이스”에서 HSV의 각 색상별 영역에서 설명한 것을 근거로 작성하였습니다. 빨강은 180을 기점으로 둘로 나뉘어(0~15, 165~180) 있으므로 마스크 생성과 색상 추출에도 두 번씩 사용했습니다. 코드 ③에서 cv2.inRange() 함수를 호출해서 각 색상 범위별 마스크를 만듭니다. 이 함수는 첫 번째 인자의 영상에서 두 번째와 세 번째 인자의 배열 구간에 포함되면 해당 픽셀의 값으로 255를 할당하고 그렇지 않으면 0을 할당합니다. 그래서 이 함수의 반환 결과는 바이너리 스케일이 되어 코드 ④의 cv2․bitwise_and() 함수의 mask로 사용하기 적합합니다.
-
-이와 같이 색상을 이용한 마스크를 이용하는 것이 크로마 키(chroma key)의 원리입니다. 일기예보나 영화를 촬영할 때 초록색 또는 파란색 배경을 두고 찍어서 나중에 원하는 배경과 합성하는 것을 크로마 키잉(chroma keying)이라고 하고 그 초록
-
-4.4 이미지 연산
-
-147
-
-
-색 배경을 크로마 키라고 합니다. 다음 [예제 4-23]은 크로마 키를 배경으로 한 영상에서 크로마 키 색상으로 마스크를 만들어 합성하는 예제입니다.
-
-[예제 4-23] 크로마키 마스킹과 합성 (chromakey.py)
-
-import cv2 import numpy as np import matplotlib.pylab as plt
-
-# 크로마키 영상과 합성할 영상 읽기 --1 img1 = cv2.imread('../img/man_chromakey.jpg') img2 = cv2.imread('../img/street.jpg')
-
-# ROI 선택을 위한 좌표 계산 (가운데에 위치하기 위한) --2 height1, width1 = img1.shape[:2] height2, width2 = img2.shape [:2] x = (width2 y = height2 - height1 w = x + widthl h = y + height1 - widthl)//2
-
-chromakey =offset = 20# 크로마키 배경 영상에서 크로마 키가 있을 법한 영역을 10픽셀 정도로 지정 --3img1[:10, :10, :]
-
-# 크로마 키 영역과 영상 전체를 HSV로 변경 -- ④ hsv_chroma = cv2.cvtColor(chromakey, cv2.COLOR_BGR2HSV) hsv_img = cv2.cvtColor(img1, cv2.COLOR_BGR2HSV)
-
-# 크로마키 영역의 H 값에서 offset 만큼 여유를 두어서 범위 지정 #offset 값은 여러 차례 시도 후 결정 chroma_h = hsv_chroma[:, :, 이 lower = np.array( [chroma_h.min()-offset, 100, 100]upper = np.array( [chroma_h.max()+offset, 255, 255])
-
-= # 마스크 생성 및 마스킹 후 합성 mask = cv2.inRange(hsv_img, lower, upper) = mask_inv roi = img2[y:h, x:w] cv2.bitwise_not(mask) fg cv2.bitwise_and(img1, img1, mask=mask_inv) bg cv2.bitwise_and(roi, roi, mask=mask) img2 [y:h, x:w] - fg + bg
-
-# -- 7 결과 출력 cv2.imshow(' ('chromakey', img1) cv2.imshow('added', img2) cv2.waitKey() cv2.destroyAllWindows()
-
-3 사진 출처: https://pixabay.com
-
-)
-
-4장 이미지 프로세싱 기초
-
-OpenCV
-
-148
-
-
-fireiron (X-639 293) - R:19 G:16 B-36 added
-
-[그림 4-27] [예제 4-23]의 실행 결과
-
-[그림 4-27]은 왼쪽에 한 남자가 크로마 키를 배경으로 찍은 사진을 어느 거리를 찍은사진과 합성한 것입니다. [예제 4-23]의 코드 ②에서는 남자가 서 있는 왼쪽 끝 배경10 × 10 픽셀 영역을 크로마 키가 있는 영역으로 어림잡아 지정했습니다. 이 영역의색상 값 중에 가장 큰 값과 가장 작은 값을 범위로 지정해서 cv2.inRange() 함수를 사용하면 배경만 제거할 수 있습니다. 코드 ④에서는 앞서 어림잡아 선택한 영역의 색상 값보다 더 넓은 영역의 색상을 선택할 수 있도록 offset 만큼 가감하게 했고 그 수치는 결과를 확인하면서 경험적으로 얻어야 합니다. 크로마 키의 색상 값도 화면 전체적으로는 조금씩 다를 수 있기 때문입니다. S와 V 값의 선택 범위도 마찬가지입니다. 나머지 마스킹과 합성 작업은 이전에 했던 것과 크게 다르지 않습니다.
-
-이렇게 영상 합성에는 대부분 알파 블렌딩 또는 마스킹이 필요합니다. 하지만, 이런 작업은 블렌딩을 위한 적절한 알파 값 선택과 마스킹을 위한 모양의 좌표나 색상값 선택에 많은 노력과 시간이 필요합니다. OpenCV는 3 버전에서 재미있는 함수를추가했는데, 알아서 두 영상의 특징을 살려 합성하는 기능입니다. 이 함수의 설명은아래와 같습니다.
-
-dst = cv2.seamlessClone(src, dst, mask, coords, flagsl, output])
-
-• src: 입력 영상, 일반적으로 전경
-
-• dst: 대상 영상, 일반적으로 배경
-
-• mask: 마스크, src에서 합성하고자 하는 영역은 255, 나머지는 0
-
-• coodrs: src가 놓여지기 원하는 dst의 좌표(중앙)
-
-flags: 합성 방식
-
-●
-
-●
-
-4.4 이미지 연산
-
-Project
-
-149
-
-
-OpenCV
-
-cv2.NORMAL_CLONE: 입력 원본 유지.
-
-• cv2.MIXED_CLONE: 입력과 대상을 혼합
-
-output: 합성 결과
-
-dst: 합성 결과
-
-아래의 [그림 4-28]은 필자의 딸이 8세 때 그린 꽃 그림과 필자의 손을 찍은 사진입니다.
-
-[그림 4-28] 꽃 그림과 필자의 손
-
-이제 cv2.SeamlessClone() 함수로 사진을 합성해서 제 손에 꽃 문신을 한 것처럼 만들어 보겠습니다.
-
-[예제 4-24] SeamlessClone으로 합성(seamlessclone.py)
-
-import cv2
-
 import numpy as np
-
 import matplotlib.pylab as plt
 
-# 합성 대상 영상 읽기
+#--① 큐브 영상 읽어서 HSV로 변환
+img = cv2.imread("./img/cube.jpg")
+hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-img1 = cv2.imread("../img/drawing.jpg")
+#--② 색상별 영역 지정
+blue1 = np.array([90, 50, 50])
+blue2 = np.array([120, 255, 255])
+green1 = np.array([45, 50, 50])
+green2 = np.array([75, 255, 255])
+red1 = np.array([0, 50, 50])
+red2 = np.array([15, 255, 255])
+red3 = np.array([165, 50, 50])
+red4 = np.array([180, 255, 255])
+yellow1 = np.array([20, 50, 50])
+yellow2 = np.array([35, 255, 255])
 
-img2= cv2.imread("../img/my_hand.jpg")
+# --③ 색상에 따른 마스크 생성
+mask_blue = cv2.inRange(hsv, blue1, blue2)
+mask_green = cv2.inRange(hsv, green1, green2)
+mask_red = cv2.inRange(hsv, red1, red2)
+mask_red2 = cv2.inRange(hsv, red3, red4)
+mask_yellow = cv2.inRange(hsv, yellow1, yellow2)
 
-# 마스크 생성, 합성할 이미지 전체 영역을 255로 세팅mask = np.full_like(img1, 255)
+#--④ 색상별 마스크로 색상만 추출
+res_blue = cv2.bitwise_and(img, img, mask=mask_blue)
+res_green = cv2.bitwise_and(img, img, mask=mask_green)
+res_red1 = cv2.bitwise_and(img, img, mask=mask_red)
+res_red2 = cv2.bitwise_and(img, img, mask=mask_red2)
+res_red = cv2.bitwise_or(res_red1, res_red2)
+res_yellow = cv2.bitwise_and(img, img, mask=mask_yellow)
 
-4장 이미지 프로세싱 기초
+#--⑤ 결과 출력
+imgs = {'original': img, 'blue':res_blue, 'green':res_green, 
+                            'red':res_red, 'yellow':res_yellow}
+for i, (k, v) in enumerate(imgs.items()):
+    plt.subplot(2, 3, i+1)
+    plt.title(k)
+    plt.imshow(v[:,:,::-1])
+    plt.xticks([]); plt.yticks([])
 
-●
+plt.show()
+```
 
-.
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204097865-66450709-a053-4e9a-8dd0-b918021b6b81.png">
+</p>
 
-150
+코드 ②에서 지정한 색상별 영역은 HSV의 각 색상별 영역에서 설명한 것을 근거로 작성하였습니다. 빨강은 180을 기점으로 둘로 나뉘어(0~15, 165~180) 있으므로 마스크 생성과 색상 추출에도 두 번씩 사용했습니다. 코드 ③에서 `cv2.inRange()` 함수를 호출해서 각 색상 범위별 마스크를 만듭니다. 이 함수는 첫 번째 인자의 영상에서 두 번째와 세 번째 인자의 배열 구간에 포함되면 해당 픽셀의 값으로 255를 할당하고 그렇지 않으면 0을 할당합니다. 그래서 이 함수의 반환 결과는 바이너리 스케일이 되어 코드 ④의 `cv2․bitwise_and()` 함수의 mask로 사용하기 적합합니다.
 
-
-# 합성 대상 좌표 계산 (img2의 중앙) height, width = img2.shapel:21 center = (width//2, height//2)
-
-# seamlessClone 으로 합성 (1) normal = cv2.seamlessClone(img1, img2, mask, center, cv2.NORMAL_CLONE ) mixed = cv2.seamlessClone(img1, img2, mask, center, cv2.MIXED_CLONE)
-
-# 결과 출력 cv2.imshow('normal', normal) cv2.imshow('mixed', mixed) cv2.waitKey() cv2.destroyAllWindows()
-
-[그림 4-29] [예제 4-24]의 실행 결과
-
-(500, y-8) - R-218 G.203 B: 146
-
-[예제 4-24] 코드 ①이 이 예제의 핵심적인 코드입니다. img1을 img2에다가 mask에 지정된 영역만큼 center 좌표에 합성합니다. 이때 mask는 img1의 전체 영역을 255채워서 해당 영역 전부가 합성의 대상임을 표현합니다. 가급적이면 합성하려는 영역을 제외하고 0으로 채우는 것이 더 좋은 결과를 보여주지만 이번 예제에서는 일부러 대충해 보았습니다. 결과로 나온 [그림 4-29]를 보면 함수의 마지막 인자 플래그가 cv2.NORMAL_CLONE인 경우 꽃 그림이 선명하긴 하지만, 주변의 피부가 뭉개진 듯한 결과를 보입니다. 반면에, cv2.MIXED_CLONE을 사용한 경우에는 감쪽같이 두 영상의 특징을 살려서 표현하고 있습니다. 이 함수는 이미지 합성에 꼭 필요한 알파 값이나 마스크에 대해 신경 쓰지 않아도 되서 무척 편리합니다.
-
-Project
-
-4.4 이미지 연산
-
-151
-
-
-OpenCV
+이와 같이 **색상을 이용한 마스크를 이용하는 것이 크로마 키(chroma key)의 원리**입니다. 일기예보나 영화를 촬영할 때 **초록색 또는 파란색 배경을 두고 찍어서 나중에 원하는 배경과 합성하는 것을 크로마 키잉(chroma keying)**이라고 하고 **그 초록색 배경을 크로마 키**라고 합니다.
 
 
 <p align="center">
-<img alt="image" src="">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204100127-45bf5c84-9bc2-4438-9e97-f1946b195d86.jpg">
 </p>
-
 
 <p align="center">
-<img alt="image" src="">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204100151-2aaa9362-682e-43d9-a07c-b78c0fd23b38.jpg">
 </p>
 
+다음 코드는 크로마 키를 배경으로 한 영상에서 크로마 키 색상으로 마스크를 만들어 합성하는 예제로, 위 두 사진을 이용하겠습니다.
+
+```py
+'''크로마키 마스킹과 합성'''
+import cv2
+import numpy as np
+import matplotlib.pylab as plt
+
+#--① 크로마키 배경 영상과 합성할 배경 영상 읽기
+img1 = cv2.imread('./img/man_chromakey.jpg')
+img2 = cv2.imread('./img/street.jpg')
+
+#--② ROI 선택을 위한 좌표 계산
+height1, width1 = img1.shape[:2]
+height2, width2 = img2.shape[:2]
+x = (width2 - width1)//2
+y = height2 - height1
+w = x + width1
+h = y + height1
+print('height1 : ', height1, 'width1 : ', width1)
+print('height2 : ', height2, 'width2 : ', width2)
+print('x : ', x)
+print('y : ', y)
+print('w : ', w)
+print('h : ', h)
+
+#--③ 크로마키 배경 영상에서 크로마키 영역을 10픽셀 정도로 지정
+chromakey = img1[:10, :10, :]
+offset = 20
+
+#--④ 크로마키 영역과 영상 전체를 HSV로 변경
+hsv_chroma = cv2.cvtColor(chromakey, cv2.COLOR_BGR2HSV)
+hsv_img = cv2.cvtColor(img1, cv2.COLOR_BGR2HSV)
+
+#--⑤ 크로마키 영역의 H값에서 offset 만큼 여유를 두어서 범위 지정
+# offset 값은 여러차례 시도 후 결정
+#chroma_h = hsv_chroma[0]
+chroma_h = hsv_chroma[:,:,0]
+lower = np.array([chroma_h.min()-offset, 100, 100])
+upper = np.array([chroma_h.max()+offset, 255, 255])
+
+#--⑥ 마스크 생성 및 마스킹 후 합성
+mask = cv2.inRange(hsv_img, lower, upper)
+mask_inv = cv2.bitwise_not(mask)
+roi = img2[y:h, x:w]
+cv2.imshow('mask', mask)
+cv2.imshow('mask_inv', mask_inv)
+cv2.imshow('roi', roi)
+
+fg = cv2.bitwise_and(img1, img1, mask=mask_inv)
+bg = cv2.bitwise_and(roi, roi, mask=mask)
+img2[y:h, x:w] = fg + bg
+
+#--⑦ 결과 출력
+cv2.imshow('fg', fg)
+cv2.imshow('bg', bg)
+
+cv2.imshow('chromakey', img1)
+cv2.imshow('added', img2)
+cv2.waitKey()
+cv2.destroyAllWindows()
+
+[output]
+height1 :  400 width1 :  314
+height2 :  426 width2 :  640
+x :  163
+y :  26
+w :  477
+h :  426
+```
 
 <p align="center">
-<img alt="image" src="">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204099678-7bf9d60a-249f-459f-81c9-fa04a0448a6b.png">
 </p>
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204099681-aa2b3260-2253-4868-a8e6-3f64e44be29f.png">
+</p>
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204099915-1fc133e6-a658-44cb-b007-0fe3f73d27c3.png">
+</p>
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204099694-552b9bf0-2694-4b7c-af06-523e334c7ee0.png">
+</p>
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204099702-ab67f5e5-b587-4c02-9628-a318893bc7ef.png">
+</p>
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204098698-ed0da3a3-d63a-42eb-9ef3-8a0373715cb6.png">
+</p>
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204098706-9fe360ee-10dc-42ec-bfbe-8fbf2e244866.png">
+</p>
+
+왼쪽에 한 남자가 크로마 키를 배경으로 찍은 사진을 어느 거리를 찍은사진과 합성한 것입니다. 코드 ②에서는 남자가 서 있는 왼쪽 끝 배경 10 × 10 픽셀 영역을 크로마 키가 있는 영역으로 어림잡아 지정했습니다. 이 영역의 색상 값 중에 가장 큰 값과 가장 작은 값을 범위로 지정해서 `cv2.inRange()` 함수를 사용하면 배경만 제거할 수 있습니다. 코드 ④에서는 앞서 어림잡아 선택한 영역의 색상 값보다 더 넓은 영역의 색상을 선택할 수 있도록 offset 만큼 가감하게 했고 그 수치는 결과를 확인하면서 경험적으로 얻어야 합니다. 크로마 키의 색상 값도 화면 전체적으로는 조금씩 다를 수 있기 때문입니다. S와 V 값의 선택 범위도 마찬가지입니다. 나머지 마스킹과 합성 작업은 이전에 했던 것과 크게 다르지 않습니다.
+
+이렇게 **영상 합성에는 대부분 알파 블렌딩 또는 마스킹이 필요합니다.** 하지만, 이런 작업은 블렌딩을 위한 적절한 알파 값 선택과 마스킹을 위한 모양의 좌표나 색상값 선택에 많은 노력과 시간이 필요합니다. OpenCV는 3 버전에서 재미있는 함수를 추가했는데, 알아서 두 영상의 특징을 살려 합성하는 기능입니다. 이 함수의 설명은 아래와 같습니다.
+
+* `dst = cv2.seamlessClone(src, dst, mask, coords, flags[, output])`
+    * `src` : 입력 영상, 일반적으로 전경
+    * `dst` : 대상 영상, 일반적으로 배경
+    * `mask` : 마스크, src에서 합성하고자 하는 영역은 255, 나머지는 0
+    * `coodrs` : src가 놓여지기 원하는 dst의 좌표(중앙)
+    * `flags` : 합성 방식
+        * `cv2.NORMAL_CLONE` : 입력 원본 유지
+        * `cv2.MIXED_CLONE` : 입력과 대상을 혼합
+    * `output` : 합성 결과
+    * `dst` : 합성 결과
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204100218-c0c964bf-8fd3-40ae-b9b3-5c89786b47b2.jpg">
+</p>
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204100232-743464be-dad3-4e6d-9c06-8ae8777cd404.jpg">
+</p>
+
+위 사진을 이용하여, `cv2.SeamlessClone()` 함수로 사진을 합성해서 손에 꽃 문신을 한 것처럼 만들어 보겠습니다.
+
+```py
+'''SeamlessClone으로 합성'''
+import cv2
+import numpy as np
+import matplotlib.pylab as plt
+ 
+#--① 합성 대상 영상 읽기
+img1 = cv2.imread("./img/drawing.jpg")
+img2 = cv2.imread("./img/my_hand.jpg")
+
+#--② 마스크 생성, 합성할 이미지 전체 영역을 255로 셋팅
+mask = np.full_like(img1, 255)
+ 
+#--③ 합성 대상 좌표 계산(img2의 중앙)
+height, width = img2.shape[:2]
+center = (width//2, height//2)
+ 
+#--④ seamlessClone 으로 합성 
+normal = cv2.seamlessClone(img1, img2, mask, center, cv2.NORMAL_CLONE)
+mixed = cv2.seamlessClone(img1, img2, mask, center, cv2.MIXED_CLONE)
+
+#--⑤ 결과 출력
+cv2.imshow('normal', normal)
+cv2.imshow('mixed', mixed)
+cv2.waitKey()
+cv2.destroyAllWindows()
+```
+
+위 코드 ④가 이 예제의 핵심적인 코드입니다. img1을 img2에다가 mask에 지정된 영역만큼 center 좌표에 합성합니다. 이때 mask는 img1의 전체 영역을 255채워서 해당 영역 전부가 합성의 대상임을 표현합니다. 가급적이면 합성하려는 영역을 제외하고 0으로 채우는 것이 더 좋은 결과를 보여주지만 이번 예제에서는 일부러 대충해 보았습니다. 결과를 보면 함수의 마지막 인자 플래그가 `cv2.NORMAL_CLONE` 인 경우 꽃 그림이 선명하긴 하지만, 주변의 피부가 뭉개진 듯한 결과를 보입니다. 반면에, `cv2.MIXED_CLONE` 을 사용한 경우에는 감쪽같이 두 영상의 특징을 살려서 표현하고 있습니다. 이 함수는 이미지 합성에 꼭 필요한 알파 값이나 마스크에 대해 신경 쓰지 않아도 되서 무척 편리합니다.
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204100364-bf7e5b40-eb85-4779-88b5-a089345bd592.png">
+</p>
+
+<p align="center">
+<img alt="image" src="https://user-images.githubusercontent.com/77891754/204100370-3d72c7b2-6ed5-4646-b551-ca52682bf1c3.png">
+</p>
+
+
+
+
