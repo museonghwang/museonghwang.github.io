@@ -1,6 +1,6 @@
 ---
 layout: post
-title: OpenCV Image Processing 컬러 스페이스
+title: OpenCV Image Processing 스레시홀딩
 category: OpenCV
 tag: OpenCV
 ---
