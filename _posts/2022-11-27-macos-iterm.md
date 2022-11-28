@@ -1,8 +1,8 @@
 ---
 layout: post
 title: M1 MacOS iTerm2 설치 및 꾸미기
-category: MacOS
-tag: MacOS
+category: Mac
+tag: Mac
 ---
 
 # M1 MacOS iTerm2 설치 및 꾸미기
