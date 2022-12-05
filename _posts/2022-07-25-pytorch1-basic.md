@@ -57,6 +57,8 @@ date: 2022-07-25
 * 넘파이(NumPy)의 ndarray와 유사
 * GPU를 사용한 연산 가속 가능
 
+<br>
+
 
 
 ## 1. 넘파이로 텐서 만들기(벡터와 행렬 만들기)
@@ -100,6 +102,8 @@ Shape of t:  (7,)
 * `.shape`는 크기를 출력합니다.
     * `(7, )`는 `(1, 7)`을 의미합니다. 다시 말해 `(1 × 7)`의 크기를 가지는 벡터입니다.
 
+<br>
+
 
 
 ## 1.2 2D with Numpy
@@ -132,8 +136,6 @@ Shape of t:  (4, 3)
 
 
 
-
-
 ## 2. 파이토치 텐서(PyTorch Tensor)
 
 파이토치는 Numpy와 매우 유사합니다. 우선 torch를 임포트합니다.
@@ -144,90 +146,109 @@ import torch
 
 
 
-
-
-### 2.1 텐서 초기화
+## 2.1 텐서 초기화
 
 우선 텐서를 초기화 하는 여러가지 방법을 살펴보겠습니다.
 
-#### 초기화 되지 않은 텐서
+
+
+### 초기화 되지 않은 텐서
+
 ```py
 x = torch.empty(4, 2)
 print(x)
-```
-```
+
+[output]
 tensor([[7.2747e-35, 0.0000e+00],
         [3.3631e-44, 0.0000e+00],
         [       nan, 0.0000e+00],
         [1.1578e+27, 1.1362e+30]])
 ```
 
-#### 무작위로 초기화된 텐서
+
+
+### 무작위로 초기화된 텐서
+
 ```py
 x = torch.rand(4, 2)
 print(x)
-```
-```
+
+[output]
 tensor([[0.7464, 0.7540],
         [0.5432, 0.0055],
         [0.4031, 0.0854],
         [0.6742, 0.8194]])
 ```
 
-#### 데이터 타입(dtype)이 long이고, 0으로 채워진 텐서
+
+
+### 데이터 타입(dtype)이 long이고, 0으로 채워진 텐서
+
 ```py
 x = torch.zeros(4, 2, dtype=torch.long)
 print(x)
-```
-```
+
+[output]
 tensor([[0, 0],
         [0, 0],
         [0, 0],
         [0, 0]])
 ```
 
-#### 사용자가 입력한 값으로 텐서 초기화
+
+
+### 사용자가 입력한 값으로 텐서 초기화
+
 ```py
 x = torch.tensor([3, 2.3])
 print(x)
-```
-```
+
+[output]
 tensor([3.0000, 2.3000])
 ```
 
-#### 2 x 4 크기, double 타입, 1로 채워진 텐서
+
+
+### 2 x 4 크기, double 타입, 1로 채워진 텐서
+
 ```py
 x = x.new_ones(2, 4, dtype=torch.double)
 print(x)
-```
-```
+
+[output]
 tensor([[1., 1., 1., 1.],
         [1., 1., 1., 1.]], dtype=torch.float64)
 ```
 
-#### x와 같은 크기, float 타입, 무작위로 채워진 텐서
+
+
+### x와 같은 크기, float 타입, 무작위로 채워진 텐서
+
 ```py
 x = torch.randn_like(x, dtype=torch.float)
 print(x)
-```
-```
+
+[output]
 tensor([[ 0.4575, -0.9619,  1.2463, -0.5515],
         [-1.5581, -0.6273,  0.0430,  0.5415]])
 ```
 
-#### 텐서의 크기 계산
+
+
+### 텐서의 크기 계산
+
 ```py
 print(x.size())
-```
-```
+
+[output]
 torch.Size([2, 4])
 ```
 
+<br>
 
 
 
-
-### 2.2 데이터 타입(Data Type)
+## 2.2 데이터 타입(Data Type)
 
 다음은 텐서의 데이터 타입 방법입니다.
 
@@ -246,8 +267,8 @@ torch.Size([2, 4])
 ft = torch.FloatTensor([1, 2, 3])
 print(ft)
 print(ft.dtype)
-```
-```
+
+[output]
 tensor([1., 2., 3.])
 torch.float32
 ```
@@ -256,8 +277,8 @@ torch.float32
 print(ft.short())
 print(ft.int())
 print(ft.long())
-```
-```
+
+[output]
 tensor([1, 2, 3], dtype=torch.int16)
 tensor([1, 2, 3], dtype=torch.int32)
 tensor([1, 2, 3])
@@ -267,8 +288,8 @@ tensor([1, 2, 3])
 it = torch.IntTensor([1, 2, 3])
 print(it)
 print(it.dtype)
-```
-```
+
+[output]
 tensor([1, 2, 3], dtype=torch.int32)
 torch.int32
 ```
@@ -277,18 +298,18 @@ torch.int32
 print(it.float())
 print(it.double())
 print(it.half())
-```
-```
+
+[output]
 tensor([1., 2., 3.])
 tensor([1., 2., 3.], dtype=torch.float64)
 tensor([1., 2., 3.], dtype=torch.float16)
 ```
 
+<br>
 
 
 
-
-### 2.3 CUDA Tensors
+## 2.3 CUDA Tensors
 
 - `.to` 메소드를 사용하여 텐서를 어떠한 장치(cpu, gpu)로도 옮길 수 있음
 
@@ -297,64 +318,60 @@ x = torch.randn(1)
 print(x)
 print(x.item())
 print(x.dtype)
-```
-```
+x = x.to(device)
+print(x)
+
+[output]
 tensor([-0.9480])
 -0.9479643106460571
 torch.float32
+tensor([-0.9480], device='cuda:0')
 ```
 
 다음은 cuda와 cpu간 변화를 볼 수 있습니다.
+
 ```py
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 #torch.device('cuda')
 #torch.device('cpu')
 print(device)
-```
-```
+
+[output]
 cuda
 ```
 
 ```py
 y = torch.ones_like(x, device=device)
 print(y)
-```
-```
-tensor([1.], device='cuda:0')
-```
 
-```py
-x = x.to(device)
-print(x)
-```
-```
-tensor([-0.9480], device='cuda:0')
+[output]
+tensor([1.], device='cuda:0')
 ```
 
 ```py
 z = x + y
 print(z)
-```
-```
+
+[output]
 tensor([0.0520], device='cuda:0')
 ```
 
 ```py
 print(z.to('cpu', torch.double))
-```
-```
+
+[output]
 tensor([0.0520], dtype=torch.float64)
 ```
 
+<br>
 
 
 
-
-### 2.4 다차원 텐서 표현
-
+## 2.4 다차원 텐서 표현
 
 
-#### 0D Tensor: Scalar(스칼라)
+
+### 0D Tensor: Scalar(스칼라)
 
 * 하나의 숫자를 담고 있는 텐서(tensor)
 * 축과 형상이 없음
@@ -366,25 +383,27 @@ print(scalar1)
 
 scalar2 = torch.tensor(3)
 print(scalar2)
-```
-```
+
+[output]
 tensor(1)
 tensor(3)
 ```
 
 `dim()`을 사용하면 현재 텐서의 차원을 보여줍니다. `shape`나 `size()`를 사용하면 크기를 확인할 수 있습니다.
+
 ```py
 print(scalar1.dim())  # rank. 즉, 차원
 print(scalar1.shape)  # shape
 print(scalar1.size()) # shape
-```
-```
+
+[output]
 0
 torch.Size([])
 torch.Size([])
 ```
 
-스칼라라는 의미로 숫자 한개만을 선언을 했지만 내부적으로 크기가 1인 벡터로 인식합니다. 즉 현재 1차원 텐서이며, 원소는 1개 입니다. 다음은 스칼라 값 간의 사칙연산을 해보겠습니다.
+스칼라 라는 의미로 숫자 한개만을 선언을 했지만 내부적으로 크기가 1인 벡터로 인식합니다. 즉 현재 1차원 텐서이며, 원소는 1개 입니다. 다음은 스칼라 값 간의 사칙연산을 해보겠습니다.
+
 ```py
 # 스칼라 값 간의 사칙연산: +, -, *, /
 add_scalar = scalar1 + scalar2
@@ -398,8 +417,8 @@ print(mul_scalar)
 
 div_scalar = scalar1 / scalar2
 print(div_scalar)
-```
-```
+
+[output]
 tensor(4)
 tensor(-2)
 tensor(3)
@@ -412,8 +431,8 @@ print(torch.add(scalar1, scalar2))
 print(torch.sub(scalar1, scalar2))
 print(torch.mul(scalar1, scalar2))
 print(torch.div(scalar1, scalar2))
-```
-```
+
+[output]
 tensor(4)
 tensor(-2)
 tensor(3)
@@ -436,25 +455,27 @@ print(vector1)
 
 vector2 = torch.tensor([4., 5., 6.])
 print(vector2)
-```
-```
+
+[output]
 tensor([1.])
 tensor([3.])
 ```
 
 마찬가지로 현재 텐서의 차원과 크기를 확인할 수 있습니다.
+
 ```py
 print(vector1.dim())  # rank. 즉, 차원
 print(vector1.shape)  # shape
 print(vector1.size()) # shape
-```
-```
+
+[output]
 1
 torch.Size([3])
 torch.Size([3])
 ```
 
 현재 1차원 텐서이며, 원소는 3개입니다. 다음은 벡터 값 간의 사칙연산을 해보겠습니다.
+
 ```py
 # 벡터 값 간의 사칙연산: +, -, *, /
 # 여기서 곱셈과 나눗셈은 각 요소별로(element-wise) 연산된다.
@@ -469,8 +490,8 @@ print(mul_vector)
 
 div_vector = vector1 / vector2
 print(div_vector)
-```
-```
+
+[output]
 tensor([5., 7., 9.])
 tensor([-3., -3., -3.])
 tensor([ 4., 10., 18.])
@@ -484,8 +505,8 @@ print(torch.sub(vector1, vector2))
 print(torch.mul(vector1, vector2))
 print(torch.div(vector1, vector2))
 print(torch.dot(vector1, vector2))# 벡터의 내적
-```
-```
+
+[output]
 tensor([5., 7., 9.])
 tensor([-3., -3., -3.])
 tensor([ 4., 10., 18.])
@@ -502,7 +523,8 @@ tensor(32.)
 * 일반적인 수치, 통계 데이터셋이 해당
 * 주로 샘플(samples)과 특성(features)을 가진 구조로 사용
 
-파이토치로 2차원 텐서인 행렬을 만들어봅시다.
+파이토치로 2차원 텐서인 행렬을 만들어보겠습니다.
+
 ```py
 # 행렬 값 정의
 matrix1 = torch.tensor([[1., 2.],
@@ -512,8 +534,8 @@ print(matrix1)
 matrix2 = torch.tensor([[5., 6.],
                         [7., 8.]])
 print(matrix2)
-```
-```
+
+[output]
 tensor([[1., 2.],
         [3., 4.]])
 tensor([[5., 6.],
@@ -521,18 +543,20 @@ tensor([[5., 6.],
 ```
 
 마찬가지로 현재 텐서의 차원과 크기를 확인할 수 있습니다.
+
 ```py
 print(matrix1.dim())  # rank. 즉, 차원
 print(matrix1.shape)  # shape
 print(matrix1.size()) # shape
-```
-```
+
+[output]
 2
 torch.Size([2, 2])
 torch.Size([2, 2])
 ```
 
 현재 2차원 텐서입니다. 다음은 행렬 값 간의 사칙연산을 해보겠습니다.
+
 ```py
 # 행렬 값 간의 사칙연산: +, -, *, /
 sum_matrix = matrix1 + matrix2
@@ -546,8 +570,8 @@ print(mul_matrix)
 
 div_matrix = matrix1 / matrix2
 print(div_matrix)
-```
-```
+
+[output]
 tensor([[ 6.,  8.],
         [10., 12.]])
 tensor([[-4., -4.],
@@ -564,9 +588,9 @@ print(torch.add(matrix1, matrix2))
 print(torch.sub(matrix1, matrix2))
 print(torch.mul(matrix1, matrix2))
 print(torch.div(matrix1, matrix2))
-print(torch.matmul(matrix1, matrix2))# 행렬 곱 연산
-```
-```
+print(torch.matmul(matrix1, matrix2)) # 행렬 곱 연산
+
+[output]
 tensor([[ 6.,  8.],
         [10., 12.]])
 tensor([[-4., -4.],
@@ -581,7 +605,7 @@ tensor([[19., 22.],
 
 
 
-#### 3D Tensor(텐서)
+### 3D Tensor(텐서)
 
 * 행렬을 2차원 배열이라 표현할 수 있다면, 텐서는 2차원 이상의 배열이라 표현할 수 있다.
 * 텐서 내 행렬 단위의 인덱스 간, 행렬 내 인덱스 간 원소끼리 계산되며 행렬 곱은 텐서 내 같은 행렬 단위의 인덱스 간에 계산된다.
@@ -605,8 +629,8 @@ tensor2 = torch.tensor([ [ [9., 10.],
                          [ [13., 14.],
                            [15., 16.] ] ])
 print(tensor2)
-```
-```
+
+[output]
 tensor([[[1., 2.],
          [3., 4.]],
 
@@ -620,18 +644,20 @@ tensor([[[ 9., 10.],
 ```
 
 마찬가지로 현재 텐서의 차원과 크기를 확인할 수 있습니다.
+
 ```py
 print(tensor1.dim())  # rank. 즉, 차원
 print(tensor1.shape)  # shape
 print(tensor1.size()) # shape
-```
-```
+
+[output]
 3
 torch.Size([2, 2, 2])
 torch.Size([2, 2, 2])
 ```
 
 현재 3차원 텐서입니다. 다음은 텐서 값 간의 사칙연산을 해보겠습니다.
+
 ```py
 # 텐서 값 간의 사칙연산: +, -, *, /
 sum_tensor = tensor1 + tensor2
@@ -645,8 +671,8 @@ print(mul_tensor)
 
 div_tensor = tensor1 / tensor2
 print(div_tensor)
-```
-```
+
+[output]
 tensor([[[10., 12.],
          [14., 16.]],
 
@@ -676,8 +702,8 @@ print(torch.sub(tensor1, tensor2))
 print(torch.mul(tensor1, tensor2))
 print(torch.div(tensor1, tensor2))
 print(torch.matmul(tensor1, tensor2))# 텐서 간 텐서곱
-```
-```
+
+[output]
 tensor([[[10., 12.],
          [14., 16.]],
 
@@ -707,7 +733,7 @@ tensor([[[ 31.,  34.],
 
 
 
-#### 4D Tensor
+### 4D Tensor
 
 * 4개의 축
 * 컬러 이미지 데이터가 대표적인 사례 (흑백 이미지 데이터는 3D Tensor로 가능)
@@ -715,7 +741,7 @@ tensor([[[ 31.,  34.],
 
 
 
-#### 5D Tensor
+### 5D Tensor
 
 * 5개의 축
 * 비디오 데이터가 대표적인 사례
