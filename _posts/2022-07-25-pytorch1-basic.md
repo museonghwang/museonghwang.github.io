@@ -71,9 +71,10 @@ Numpy로 텐서를 만드는 방법은 간단한데 [숫자, 숫자, 숫자]와 
 
 
 
-### 1.1 1D with Numpy
+## 1.1 1D with Numpy
 
 Numpy로 1차원 텐서인 벡터를 만들어보겠습니다.
+
 ```py
 # 파이썬으로 설명하면 list를 생성해서 np.array로 1차원 array로 변환함
 t = np.array([0., 1., 2., 3., 4., 5., 6.])
@@ -84,6 +85,7 @@ print(t)
 ```
 
 이제 1차원 벡터의 차원과 크기를 출력해보겠습니다.
+
 ```py
 print('Rank of t: ', t.ndim) #1차원 벡터
 print('Shape of t: ', t.shape)
@@ -100,28 +102,33 @@ Shape of t:  (7,)
 
 
 
-### 1.2 2D with Numpy
+## 1.2 2D with Numpy
 
 Numpy로 2차원 행렬을 만들어보겠습니다.
+
 ```py
 t = np.array([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.], [10., 11., 12.]])
 print(t)
-```
-```
+
+[output]
 [[ 1.  2.  3.]
  [ 4.  5.  6.]
  [ 7.  8.  9.]
  [10. 11. 12.]]
 ```
+
 ```py
 print('Rank  of t: ', t.ndim)
 print('Shape of t: ', t.shape)
-```
-```
+
+[output]
 Rank  of t:  2
 Shape of t:  (4, 3)
 ```
-현재는 행렬이므로 2차원이 출력되며, shape은(4, 3)입니다. 다른 표현으로는 (4 × 3)입니다. 이는 행렬이 4행 3열임을 의미합니다.
+
+현재는 행렬이므로 2차원이 출력되며, shape은 `(4, 3)` 입니다. 다른 표현으로는 `(4 × 3)` 입니다. 이는 행렬이 4행 3열임을 의미합니다.
+
+<br>
 
 
 
@@ -130,6 +137,7 @@ Shape of t:  (4, 3)
 ## 2. 파이토치 텐서(PyTorch Tensor)
 
 파이토치는 Numpy와 매우 유사합니다. 우선 torch를 임포트합니다.
+
 ```py
 import torch
 ```
