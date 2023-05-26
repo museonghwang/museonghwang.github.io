@@ -784,7 +784,7 @@ train.py: error: the following arguments are required: --model_fn
 ```bash
 $ python train.py --model_fn tmp.pth --gpu_id -1 --batch_size 256 --n_epochs 20 --n_layers 5
 ```
-```bash
+```
 [output]
 Train: torch.Size([48000, 784]) torch.Size([48000])
 Valid: torch.Size([12000, 784]) torch.Size([12000])
