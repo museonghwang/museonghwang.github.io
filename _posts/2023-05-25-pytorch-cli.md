@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 규
+title: pytorch project workflow 구성하기
 category: Pytorch
 tag: Pytorch
 ---
@@ -32,6 +32,7 @@ tag: Pytorch
 | **train.py** | 사용자로부터 하이퍼파라미터를 입력받아 필요한 객체들을 준비하여 학습을 진행 |
 | **predict.py** | 사용자로부터 학습된 모델과 추론을 위한 샘플을 입력받아 추론을 수행 |
 
+<br>
 
 
 
@@ -41,7 +42,7 @@ tag: Pytorch
 
 
 <p align="center">
-<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/66a20ada-ddca-4dc6-8d2b-6a6031cee0f9">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/5209a6a9-fc1e-4736-a8a3-f18f83e85cf6">
 </p>
 
 <br>
@@ -50,7 +51,7 @@ tag: Pytorch
 
 
 
-**train.py** 는 사용자가 학습을 진행할 때 직접 실행할 파이썬 스크립트 파일로, 해당 파일을 실행하면 사용자로부터 필요한 하이퍼파라미터를 입력받아 각 클래스의 객체를 생성하고 학습을 진행합니다. 사용자는 이 **<span style="color:red">train.py를 통해서 코드 수정 없이 다양한 하이퍼파라미터들을 변경해가며 반복적인 실험을 수행</span>** 할 수 있습니다.
+**train.py** 는 사용자가 학습을 진행할 때 직접 실행할 파이썬 스크립트 파일로, 해당 파일을 실행하면 사용자로부터 필요한 하이퍼파라미터를 입력받아 각 클래스의 객체를 생성하고 학습을 진행합니다. 사용자는 이 **<span style="color:red">train.py 를 통해서 코드 수정 없이 다양한 하이퍼파라미터들을 변경해가며 반복적인 실험을 수행</span>** 할 수 있습니다.
 
 
 
@@ -66,7 +67,7 @@ $ python train.py --model_fn ./models/model.pth --n_layers 10 --dropout 0.3
 <br>
 
 
-또한 **trainer** 는 **data loader** 로 부터 준비된 데이터를 넘겨받아 모델에 넣어 학습과 검증을 진행하는 역할을 수행합니다. 이렇게 학습이 완료되면 모델의 가중치 파라미터는 보통 피클(pickle) 형태로 다른 필요한 정보(e.g. 모델을 생성하기 위한 각종 설정 및 하이퍼파라미터)들과 함께 파일로 저장됩니다.
+또한 **trainer** 는 **data loader** 로 부터 준비된 데이터를 넘겨받아 모델에 넣어 학습과 검증을 진행하는 역할을 수행합니다. 이렇게 학습이 완료되면 모델의 가중치 파라미터는 보통 **피클(pickle)** 형태로 다른 필요한 정보(e.g. 모델을 생성하기 위한 각종 설정 및 하이퍼파라미터)들과 함께 파일로 저장됩니다.
 
 
 
@@ -116,7 +117,7 @@ $ python train.py --model_fn ./models/model.pth --n_layers 10 --dropout 0.3
 
 
 <p align="center">
-<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/f440cb27-6861-409e-895e-b025ee71bae5">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/6cbd5e4f-e6bf-4a3b-986c-890cca4cef1f">
 </p>
 
 <br>
@@ -143,7 +144,7 @@ MNIST라는 공개 데이터셋을 활용하므로 매우 수월하지만, 실�
 
 
 <p align="center">
-<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/4ad2e1e5-ac80-4720-a5f2-0b0664cdf5da">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/eda1cf93-1d99-4ff4-ada6-de960577124c">
 </p>
 
 <br>
@@ -155,7 +156,7 @@ MNIST라는 공개 데이터셋을 활용하므로 매우 수월하지만, 실�
 
 
 <p align="center">
-<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/e6f9ad19-f110-4ff3-8696-ca161f106584">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/bf182e10-cf7b-40a5-bb05-4a20d62b3144">
 </p>
 
 <br>
@@ -163,7 +164,7 @@ MNIST라는 공개 데이터셋을 활용하므로 매우 수월하지만, 실�
 
 
 
-일부 전처리 기법들은 데이터를 기반으로 파라미터가 결정되는데, 데이터 기반의 전처리 기법은 학습 데이터셋 기준으로 수행되어야 합니다. 즉, 학습 데이터만을 가지고 평균과 표준편차를 계산한 뒤 학습/검증/테스트 데이터셋에 일괄 적용하는 형태가 되어야 합니다. 만약 전체 데이터셋을 기반으로 평균과 표준편차를 계산하고 정규화 스케일을 적용하게 되면 테스트셋을 보고 테스트를 평가하는 것과 다를 바 없습니다. 결론적으로 전처리는 학습/검증/테스트 데이터셋 분할 작업 이후에 수행하는 것이 바람직합니다.
+일부 전처리 기법들은 데이터를 기반으로 파라미터가 결정되는데, 데이터 기반의 전처리 기법은 학습 데이터셋 기준으로 수행되어야 합니다. 즉, 학습 데이터만을 가지고 평균과 표준편차를 계산한 뒤 학습/검증/테스트 데이터셋에 일괄 적용하는 형태가 되어야 합니다. 만약 전체 데이터셋을 기반으로 평균과 표준편차를 계산하고 정규화 스케일을 적용하게 되면 테스트셋을 보고 테스트를 평가하는 것과 다를 바 없습니다. **결론적으로 전처리는 학습/검증/테스트 데이터셋 분할 작업 이후에 수행하는 것이 바람직합니다.**
 
 다행히도 MNIST 데이터셋의 경우 별다른 전처리가 필요하지 않습니다. 0에서 255사이의 값으로 채워진 픽셀 값을 255로나누어 0에서 1사이의 값으로 정규화해주는 작업 정도면 충분합니다.
 
@@ -176,22 +177,25 @@ MNIST라는 공개 데이터셋을 활용하므로 매우 수월하지만, 실�
 데이터 전처리 과정에서 수행된 분석을 통해 데이터의 분포나 성질을 파악할 수 있었을 것입니다. 따라서 우리는 분석 결과를 바탕으로 알맞은 가설을 설정하고 알고리즘 구현 및 적용해야 합니다. 이 과정에서 분석 결과에 따라 가장 적절한 머신러닝 알고리즘을 적용하면 됩니다.
 
 
-신경망 내부의 자세한 구조 결정에 앞서 회귀 문제인지 분류 문제인지에 따라 손실 함수와 마지막 계층의 활성 함수가 결정됩니다. 또한 계층의 개수, 활성 함수의 종류, 정규화 방법 등의하이퍼파라미터가 남아 있는데 이들을 결정하기 위한 프로세스는 다음과 같습니다.
+신경망 내부의 자세한 구조 결정에 앞서 회귀 문제인지 분류 문제인지에 따라 손실 함수와 마지막 계층의 활성 함수가 결정됩니다. 또한 계층의 개수, 활성 함수의 종류, 정규화 방법 등의 하이퍼파라미터가 남아 있는데 이들을 결정하기 위한 프로세스는 다음과 같습니다.
 
-1. 신경망 외형 구성
+1. **신경망 외형 구성**
     - 오버피팅이 발생할 때까지 계층을 쌓는다.
-2. 활성 함수 결정
-3. Regularization 결정
-4. Optimizer 결정
-5. 평가(Evaluation)
+2. **활성 함수 결정**
+3. **Regularization 결정**
+4. **Optimizer 결정**
+5. **평가(Evaluation)**
     - 평가를 통해 베이스라인(baseline)을 구축
-6. 튜닝(Tuning)
+6. **튜닝(Tuning)**
     - 점진적으로 성능을 개선
 
 
 <br>
 
-먼저 적당한 선택으로 초기 하이퍼파라미터를 설정한 다음에 오버피팅이 발생할 때까지 신경망을 깊고 넓게 만듭니다. 오버피팅이 발생하는 것을 확인함으로써 데이터셋의 복잡한 데이터를 신경망이 충분히 학습할 만한 수용 능력을 지녔음을 알 수 있습니다. 또한 오버피팅이 발생하더라도 매 에포크마다 검증 데이터셋에 대한 손실 값을 추적하고 있으므로 큰 문제가 되지않습니다. 이후에 적절한 score metric을 적용하여 모델을 평가하고 모델의 성능을 수치화합니다. 여기까지가 한 번의 모델링 과정을 거친 것이 되고 이후 하이퍼파라미터를 수정하며, 이 과정을 반복하여 모델의 성능을 점진적으로 개선합니다. 또는 단순한 하이퍼파라미터 수정만으로는 충분한 성능 개선이 이루어지지 않는다면 성능 저하 문제의 원인에 대한 적절한 가설을 설정하고 모델의 구조를 바꾸는 등 수정을 거쳐 성능을 개선할 수도 있습니다.
+먼저 적당한 선택으로 초기 하이퍼파라미터를 설정한 다음에 오버피팅이 발생할 때까지 신경망을 깊고 넓게 만듭니다. 오버피팅이 발생하는 것을 확인함으로써 데이터셋의 복잡한 데이터를 신경망이 충분히 학습할 만한 수용 능력을 지녔음을 알 수 있습니다. 또한 오버피팅이 발생하더라도 매 에포크마다 검증 데이터셋에 대한 손실 값을 추적하고 있으므로 큰 문제가 되지않습니다. 이후에 적절한 score metric을 적용하여 모델을 평가하고 모델의 성능을 수치화합니다.
+
+
+여기까지가 한 번의 모델링 과정을 거친 것이 되고 이후 하이퍼파라미터를 수정하며, 이 과정을 반복하여 모델의 성능을 점진적으로 개선합니다. 또는 단순한 하이퍼파라미터 수정만으로는 충분한 성능 개선이 이루어지지 않는다면 성능 저하 문제의 원인에 대한 적절한 가설을 설정하고 모델의 구조를 바꾸는 등 수정을 거쳐 성능을 개선할 수도 있습니다.
 
 <br>
 
@@ -203,7 +207,7 @@ MNIST라는 공개 데이터셋을 활용하므로 매우 수월하지만, 실�
 
 
 <p align="center">
-<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/5ce767af-8d73-47a0-8f1d-b936e3c1c46c">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/81270b7f-871b-4da0-8300-5b78e81a9e53">
 </p>
 
 <br>
@@ -215,9 +219,11 @@ MNIST라는 공개 데이터셋을 활용하므로 매우 수월하지만, 실�
 | 범주 | 학습 데이터셋 | 검증 데이터셋 | 테스트 데이터셋 |
 | --- | ---------- | --------- | ----------- |
 | 가중치 파라미터 | 결정 | 검증 | 검증 |
-| 하이퍼파라미터 |  | 결정 | 검증 |
-| 알고리즘 |  |  | 결정 |
+| 하이퍼파라미터 | - | 결정 | 검증 |
+| 알고리즘 | - | - | 결정 |
 
+
+<br>
 
 
 이와 같이 모델 성능 개선 작업이 종료되고 나면 테스트 데이터셋을 활용하여 평가를 수행함으로써 진정한 모델(또는 알고리즘)의 성능을 공정하게 평가할 수 있습니다.
@@ -232,7 +238,7 @@ MNIST라는 공개 데이터셋을 활용하므로 매우 수월하지만, 실�
 
 
 <br>
-
+<br>
 
 
 
@@ -245,7 +251,7 @@ MNIST라는 공개 데이터셋을 활용하므로 매우 수월하지만, 실�
 MNIST 분류기를 만들 것이기 때문에 모델은 28×28 크기의 이미지를 펼쳐진 784차원의 벡터로 입력받아 각 숫자 클래스별 확률 값을 반환해야 합니다. 다음은 구현할 모델의 구조를 그림으로 나타낸 것입니다.
 
 <p align="center">
-<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/4bda30de-a9ce-4550-99e5-d7d725e28fc9">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/55eb1f6c-224d-4cb6-822b-07eb7004b70e">
 </p>
 
 <br>
@@ -267,7 +273,7 @@ MNIST 분류기를 만들 것이기 때문에 모델은 28×28 크기의 이미�
 ## 2. 학습 과정
 
 <p align="center">
-<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/c339ceb9-d0c9-491a-b748-075a2778ef8e">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/0fdd2c3e-735a-4760-a048-e6d266a8f965">
 </p>
 
 <br>
@@ -303,8 +309,10 @@ MNIST 분류기를 만들 것이기 때문에 모델은 28×28 크기의 이미�
 <br>
 
 
-
 ---
+
+
+<br>
 
 
 
@@ -358,9 +366,6 @@ class Block(nn.Module):
 
 
 모델은 이렇게 선언된 블록을 반복해서 재활용할 수 있습니다. 다음 코드는 최종 모델로써 앞에서 선언된 블록을 재활용하여 아키텍처를 구성하도록 되어 있습니다. 참고로 이 모델은 이후에 작성할 코드에서 MNIST 데이터를 28×28 이 아닌 784차원의 벡터로 잘 변환했을 거라고 가정했습니다. 따라서 추후에 잊지 말고 올바른 데이터를 넣어주도록 구현해주어야 합니다.
-
-<br>
-
 ```py
 class ImageClassifier(nn.Module):
 
@@ -542,16 +547,18 @@ def _train(self, x, y, config):
 
     return total_loss / len(x)
 ```
-```
-[output]
-
-```
 
 
 <br>
 
 
-함수의 시작 부분에서 잊지 않고 **train()** 함수를 호출하여 모델을 학습 모드로 전환하는 것을 확인할 수 있습니다. 만약 이 라인이 생략된다면 이전 에포크의 검증 과정에서 추론 모드였던 모델 그대로 학습에 활용될 것입니다. **for** 반복문은 작은 루프를 담당하고 해당 반복문의 내부는 미니배치의 피드포워드와 역전파 그리고 경사하강법에의한 파라미터 업데이트가 담겨있습니다. 마지막으로 **config.verbose** 에 따라 현재 학습 현황을 출력합니다. **config** 는 가장 바깥의 **train.py** 에서 사용자의 실행 시 파라미터 입력에 따른 설정값이 들어있는 객체입니다. **train** 함수의 가장 첫 부분에 **_batchify** 함수를 호출하는 것을 볼 수 있습니다. 다음 **_batchify** 함수는 매 에포크마다 SGD를 수행하기 위해 셔플링 후 미니배치를 만드는 과정입니다.
+함수의 시작 부분에서 잊지 않고 **train()** 함수를 호출하여 모델을 학습 모드로 전환하는 것을 확인할 수 있습니다. 만약 이 라인이 생략된다면 이전 에포크의 검증 과정에서 추론 모드였던 모델 그대로 학습에 활용될 것입니다. **for** 반복문은 작은 루프를 담당하고 해당 반복문의 내부는 미니배치의 피드포워드와 역전파 그리고 경사하강법에의한 파라미터 업데이트가 담겨있습니다.
+
+
+마지막으로 **config.verbose** 에 따라 현재 학습 현황을 출력합니다. **config** 는 가장 바깥의 **train.py** 에서 사용자의 실행 시 파라미터 입력에 따른 설정값이 들어있는 객체입니다.
+
+
+**train** 함수의 가장 첫 부분에 **_batchify** 함수를 호출하는 것을 볼 수 있습니다. 다음 **_batchify** 함수는 매 에포크마다 SGD를 수행하기 위해 셔플링 후 미니배치를 만드는 과정입니다.
 ```py
 def _batchify(self, x, y, batch_size, random_split=True):
     if random_split:
@@ -590,10 +597,6 @@ def _validate(self, x, y, config):
             total_loss += float(loss_i)
 
         return total_loss / len(x)
-```
-```
-[output]
-
 ```
 
 
@@ -664,6 +667,9 @@ def define_argparser():
 | use_dropout | 드롭아웃 사용 여부 | False |
 | dropout_p | 드롭아웃 사용 시 드롭 확률 | 0.3 |
 | verbose | 학습 시 로그 출력의 정도 | 1 |
+
+
+<br>
 
 
 
@@ -748,7 +754,10 @@ def main(config):
 
 
 
-MNIST에 특화된 입출력 크기를 갖는 것이 아닌 벡터 형태의 어떤 데이터도 입력받아 분류할 수 있도록 **input_size** 와 **output_size** 변수를 계산하는 것에 주목하세요. **MNIST** 에 특화된 하드코딩을 제거하였기 때문에 **load_mnist** 함수가 아닌 다른 로딩 함수로 바꿔치기하면 이 코드는 얼마든지 바로 동작할 수 있습니다. 사용자로부터 입력받은 설정(configuration)을 활용하여 모델을 선언한 이후에 아담 옵티마이저와 NLL 손실 함수도 함께 준비합니다. 그리고 트레이너를 초기화한 후 **train** 함수를 호출하여 불러온 데이터를넣어주어 학습을 시작합니다. 학습이 종료된 이후에는 **torch.save** 함수를 활용하여 모델 가중치를 **config.model_fn** 경로에 저장합니다.
+MNIST에 특화된 입출력 크기를 갖는 것이 아닌 벡터 형태의 어떤 데이터도 입력받아 분류할 수 있도록 **input_size** 와 **output_size** 변수를 계산하는 것에 주목하세요. **MNIST** 에 특화된 하드코딩을 제거하였기 때문에 **load_mnist** 함수가 아닌 다른 로딩 함수로 바꿔치기하면 이 코드는 얼마든지 바로 동작할 수 있습니다.
+
+
+사용자로부터 입력받은 설정(configuration)을 활용하여 모델을 선언한 이후에 아담 옵티마이저와 NLL 손실 함수도 함께 준비합니다. 그리고 트레이너를 초기화한 후 **train** 함수를 호출하여 불러온 데이터를 넣어주어 학습을 시작합니다. 학습이 종료된 이후에는 **torch.save** 함수를 활용하여 모델 가중치를 **config.model_fn** 경로에 저장합니다.
 
 <br>
 
@@ -775,7 +784,7 @@ train.py: error: the following arguments are required: --model_fn
 ```bash
 $ python train.py --model_fn tmp.pth --gpu_id -1 --batch_size 256 --n_epochs 20 --n_layers 5
 ```
-```
+```bash
 [output]
 Train: torch.Size([48000, 784]) torch.Size([48000])
 Valid: torch.Size([12000, 784]) torch.Size([12000])
@@ -996,6 +1005,362 @@ Predict: 7.0
 - 모델 아키텍처가 바뀌어도 바로 동작할 수 있어야 한다.
 - 하이퍼파라미터를 바꿔서 다양한 실험을 돌릴 수 있어야 한다.
 - 코드의 일부분이 수정되어도 다른 부분은 큰 수정이 없도록 독립적으로 동작해야 한다.
+
+
+<br>
+
+
+---
+
+
+
+<br>
+
+
+# 코드 정리
+
+
+## model.py : 모델 클래스 정의
+
+```py
+import torch
+import torch.nn as nn
+
+
+class Block(nn.Module):
+    
+    def __init__(self,
+                 input_size,
+                 output_size,
+                 use_batch_norm=True,
+                 dropout_p=.4):
+        self.input_size = input_size
+        self.output_size = output_size
+        self.use_batch_norm = use_batch_norm
+        self.dropout_p = dropout_p
+        
+        super().__init__()
+        
+        def get_regularizer(use_batch_norm, size):
+            return nn.BatchNorm1d(size) if use_batch_norm else nn.Dropout(dropout_p)
+        
+        self.block = nn.Sequential(
+            nn.Linear(input_size, output_size),
+            nn.LeakyReLU(),
+            get_regularizer(use_batch_norm, output_size),
+        )
+        
+    def forward(self, x):
+        # |x| = (batch_size, input_size)
+        y = self.block(x)
+        # |y| = (batch_size, output_size)
+        
+        return y
+
+    
+class ImageClassifier(nn.Module):
+
+    def __init__(self,
+                 input_size,
+                 output_size,
+                 hidden_sizes=[500, 400, 300, 200, 100],
+                 use_batch_norm=True,
+                 dropout_p=.3):
+        
+        super().__init__()
+
+        assert len(hidden_sizes) > 0, "You need to specify hidden layers"
+
+        last_hidden_size = input_size
+        blocks = []
+        for hidden_size in hidden_sizes:
+            blocks += [Block(
+                last_hidden_size,
+                hidden_size,
+                use_batch_norm,
+                dropout_p
+            )]
+            last_hidden_size = hidden_size
+        
+        self.layers = nn.Sequential(
+            *blocks,
+            nn.Linear(last_hidden_size, output_size),
+            nn.LogSoftmax(dim=-1),
+        )
+        
+    def forward(self, x):
+        # |x| = (batch_size, input_size)        
+        y = self.layers(x)
+        # |y| = (batch_size, output_size)
+        
+        return y
+```
+
+
+<br>
+
+
+
+## utils.py : 프로그램 내에서 공통적으로 활용되는 모듈을 모아 놓은 스크립트
+
+```py
+import torch
+
+
+def load_mnist(is_train=True, flatten=True):
+    from torchvision import datasets, transforms
+
+    dataset = datasets.MNIST(
+        '../data',
+        train=is_train,
+        download=True,
+        transform=transforms.Compose([
+            transforms.ToTensor(),
+        ]),
+    )
+
+    x = dataset.data.float() / 255.
+    y = dataset.targets
+
+    if flatten:
+        x = x.view(x.size(0), -1)
+
+    return x, y
+
+
+def split_data(x, y, train_ratio=.8):
+    train_cnt = int(x.size(0) * train_ratio)
+    valid_cnt = x.size(0) - train_cnt
+
+    # Shuffle dataset to split into train/valid set.
+    indices = torch.randperm(x.size(0))
+    x = torch.index_select(
+        x,
+        dim=0,
+        index=indices
+    ).split([train_cnt, valid_cnt], dim=0)
+    y = torch.index_select(
+        y,
+        dim=0,
+        index=indices
+    ).split([train_cnt, valid_cnt], dim=0)
+
+    return x, y
+
+
+def get_hidden_sizes(input_size, output_size, n_layers):
+    step_size = int((input_size - output_size) / n_layers)
+
+    hidden_sizes = []
+    current_size = input_size
+    for i in range(n_layers - 1):
+        hidden_sizes += [current_size - step_size]
+        current_size = hidden_sizes[-1]
+
+    return hidden_sizes
+```
+
+
+<br>
+
+
+
+## trainer.py : 모델 객체와 데이터를 받아 실제 학습 이터레이션을 수행하는 클래스를 정의
+
+```py
+from copy import deepcopy
+import numpy as np
+
+import torch
+
+class Trainer():
+
+    def __init__(self, model, optimizer, crit):
+        self.model = model
+        self.optimizer = optimizer
+        self.crit = crit
+
+        super().__init__()
+
+    def _batchify(self, x, y, batch_size, random_split=True):
+        if random_split:
+            indices = torch.randperm(x.size(0), device=x.device)
+            x = torch.index_select(x, dim=0, index=indices)
+            y = torch.index_select(y, dim=0, index=indices)
+
+        x = x.split(batch_size, dim=0)
+        y = y.split(batch_size, dim=0)
+
+        return x, y
+
+    def _train(self, x, y, config):
+        self.model.train()
+
+        x, y = self._batchify(x, y, config.batch_size)
+        total_loss = 0
+
+        for i, (x_i, y_i) in enumerate(zip(x, y)):
+            y_hat_i = self.model(x_i)
+            loss_i = self.crit(y_hat_i, y_i.squeeze())
+
+            # Initialize the gradients of the model.
+            self.optimizer.zero_grad()
+            loss_i.backward()
+
+            self.optimizer.step()
+
+            if config.verbose >= 2:
+                print("Train Iteration(%d/%d): loss=%.4e" % (i + 1, len(x), float(loss_i)))
+
+            # Don't forget to detach to prevent memory leak.
+            total_loss += float(loss_i)
+
+        return total_loss / len(x)
+
+    def _validate(self, x, y, config):
+        # Turn evaluation mode on.
+        self.model.eval()
+
+        # Turn on the no_grad mode to make more efficintly.
+        with torch.no_grad():
+            x, y = self._batchify(x, y, config.batch_size, random_split=False)
+            total_loss = 0
+
+            for i, (x_i, y_i) in enumerate(zip(x, y)):
+                y_hat_i = self.model(x_i)
+                loss_i = self.crit(y_hat_i, y_i.squeeze())
+
+                if config.verbose >= 2:
+                    print("Valid Iteration(%d/%d): loss=%.4e" % (i + 1, len(x), float(loss_i)))
+
+                total_loss += float(loss_i)
+
+            return total_loss / len(x)
+
+    def train(self, train_data, valid_data, config):
+        lowest_loss = np.inf
+        best_model = None
+
+        for epoch_index in range(config.n_epochs):
+            train_loss = self._train(train_data[0], train_data[1], config)
+            valid_loss = self._validate(valid_data[0], valid_data[1], config)
+
+            # You must use deep copy to take a snapshot of current best weights.
+            if valid_loss <= lowest_loss:
+                lowest_loss = valid_loss
+                best_model = deepcopy(self.model.state_dict())
+
+            print("Epoch(%d/%d): train_loss=%.4e  valid_loss=%.4e  lowest_loss=%.4e" % (
+                epoch_index + 1,
+                config.n_epochs,
+                train_loss,
+                valid_loss,
+                lowest_loss,
+            ))
+
+        # Restore to best model.
+        self.model.load_state_dict(best_model)
+```
+
+
+<br>
+
+
+
+## train.py : 사용자가 학습을 진행하기 위한 진입 지점
+
+```py
+import argparse
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+from model import ImageClassifier
+from trainer import Trainer
+
+from utils import load_mnist
+from utils import split_data
+from utils import get_hidden_sizes
+
+
+def define_argparser():
+    p = argparse.ArgumentParser()
+
+    p.add_argument('--model_fn', required=True)
+    p.add_argument('--gpu_id', type=int, default=0 if torch.cuda.is_available() else -1)
+
+    p.add_argument('--train_ratio', type=float, default=.8)
+
+    p.add_argument('--batch_size', type=int, default=256)
+    p.add_argument('--n_epochs', type=int, default=20)
+
+    p.add_argument('--n_layers', type=int, default=5)
+    p.add_argument('--use_dropout', action='store_true')
+    p.add_argument('--dropout_p', type=float, default=.3)
+
+    p.add_argument('--verbose', type=int, default=1)
+
+    config = p.parse_args()
+
+    return config
+
+
+def main(config):
+    # Set device based on user defined configuration.
+    device = torch.device('cpu') if config.gpu_id < 0 else torch.device('cuda:%d' % config.gpu_id)
+
+    x, y = load_mnist(is_train=True, flatten=True)
+    x, y = split_data(x.to(device), y.to(device), train_ratio=config.train_ratio)
+
+    print("Train:", x[0].shape, y[0].shape)
+    print("Valid:", x[1].shape, y[1].shape)
+
+    input_size = int(x[0].shape[-1])
+    output_size = int(max(y[0])) + 1
+
+    model = ImageClassifier(
+        input_size=input_size,
+        output_size=output_size,
+        hidden_sizes=get_hidden_sizes(input_size,
+                                      output_size,
+                                      config.n_layers),
+        use_batch_norm=not config.use_dropout,
+        dropout_p=config.dropout_p,
+    ).to(device)
+    optimizer = optim.Adam(model.parameters())
+    crit = nn.NLLLoss()
+
+    if config.verbose >= 1:
+        print(model)
+        print(optimizer)
+        print(crit)
+
+    trainer = Trainer(model, optimizer, crit)
+
+    trainer.train(
+        train_data=(x[0], y[0]),
+        valid_data=(x[1], y[1]),
+        config=config
+    )
+
+    # Save best model weights.
+    torch.save({
+        'model': trainer.model.state_dict(),
+        'opt': optimizer.state_dict(),
+        'config': config,
+    }, config.model_fn)
+
+
+if __name__ == '__main__':
+    config = define_argparser()
+    main(config)
+
+```
+
+
+<br>
+
 
 
 
