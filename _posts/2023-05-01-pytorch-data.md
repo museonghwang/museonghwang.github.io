@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 
+title: Pytorch Custom Dataset 사용하기
 category: Pytorch
 tag: Pytorch
 ---
