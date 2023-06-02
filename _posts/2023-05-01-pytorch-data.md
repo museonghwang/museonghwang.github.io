@@ -126,10 +126,10 @@ plt.imshow(oneshot)
 plt.axis("off")
 plt.show()
 ```
-```
-[output]
 
-```
+<p align="center">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/7d4359c8-482e-4f29-a5d4-78538629df11">
+</p>
 
 
 <br>
