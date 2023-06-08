@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Text Analytics을 위한 텍스트 전처리
+title: Text Analytics을 위한 텍스트 전처리 개요
 category: NLP(Natural Language Processing)
 tag: NLP(Natural Language Processing)
 ---
