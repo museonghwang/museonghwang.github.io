@@ -8,6 +8,36 @@ tag: NLP(Natural Language Processing)
 
 
 
+- Tokenization 개념
+- 단어 토큰화(Word Tokenization)
+- Tokenization 고려사항
+- 영어 Word Tokenization
+    1. NLTK의 토크나이저 - word_tokenize
+    2. NLTK의 토크나이저 - WordPunctTokenizer
+    3. NLTK의 토크나이저 - TreebankWordTokenizer
+    4. Keras의 토크나이저 - text_to_word_sequence
+    5. 띄어쓰기를 기준으로 하는 단어 토큰화(잘 되는 것 같아도 하지마세요)
+- 한국어 토큰화의 특징
+    1. 한국어는 띄어쓰기가 영어보다 잘 지켜지지 않는다. -> 띄어쓰기 보정 : PyKoSpacing
+    2. 한국어는 주어 생략은 물론 어순도 중요하지 않다.
+    3. 한국어는 교착어이다.
+- 한국어 Word Tokenization(KoNLPy)
+    1. 띄어쓰기를 기준으로 하는 단어 토큰화(가급적 하지마세요)
+    2. 형태소 분석기 KoNLPy 설치
+    3. KoNLPy - 형태소 분석기 Okt
+    4. KoNLPy - 형태소 분석기 꼬꼬마
+    5. KoNLPy - 형태소 분석기 코모란
+    6. KoNLPy - 형태소 분석기 한나눔
+    7. KoNLPy - 형태소 분석기 Mecab
+- 문장 토큰화(Sentence Tokenization)
+- 영어 Sentence Tokenization(NLTK)
+- 한국어 Sentence Tokenization(KSS)
+
+<br>
+
+
+
+
 
 # Tokenization 개념
 
@@ -207,7 +237,7 @@ print(text_to_word_sequence(sentence))
 
 
 
-## 띄어쓰기를 기준으로 하는 단어 토큰화(잘 되는 것 같아도 하지마세요)
+## 5. 띄어쓰기를 기준으로 하는 단어 토큰화(잘 되는 것 같아도 하지마세요)
 
 **사실 영어는 띄어쓰기를 기준으로 단어 토큰화를 한다고 하더라도 꽤 잘 되는 편입니다.** 하지만 그럼에도 띄어쓰기를 기준으로 단어 토큰화를 하는 것은 하지 않는 것이 좋은데 그 이유를 이해해보겠습니다.
 
@@ -313,18 +343,488 @@ else:
 
 
 
-영어는 **New York** 과 같은 합성어나 **he's** 와 같이 줄임말에 대한 예외처리만 한다면, 띄어쓰기(whitespace)를 기준으로 하는 띄어쓰기 토큰화를 수행해도 단어 토큰화가 잘 작동합니다. **<u>하지만 한국어는 영어와는 달리 띄어쓰기만으로는 토큰화를 하기에 부족합니다.</u>**
+영어는 **New York** 과 같은 합성어나 **he's** 와 같이 줄임말에 대한 예외처리만 한다면, 띄어쓰기(whitespace)를 기준으로 하는 띄어쓰기 토큰화를 수행해도 단어 토큰화가 잘 작동합니다. **<span style="background-color: #fff5b1">하지만 한국어는 영어와는 달리 띄어쓰기만으로는 토큰화를 하기에 부족</span>** 합니다.
 
 
 
-한국어의 경우에는 띄어쓰기 단위가 되는 단위를 '어절'이라고 하는데 어절 토큰화는 한국어 NLP에서 지양되고 있습니다. 어절 토큰화와 단어 토큰화는 같지 않기 때문입니다. 그 근본적인 이유는 한국어가 영어와는 다른 형태를 가지는 언어인 교착어라는 점에서 기인합니다. 교착어란 조사, 어미 등을 붙여서 말을 만드는 언어를 말합니다.
+**<u>한국어의 경우에는 띄어쓰기 단위가 되는 단위</u>** 를 **<span style="color:red">'어절'</span>** 이라고 하는데 어절 토큰화와 단어 토큰화는 같지 않기 때문에, **<span style="color:red">어절 토큰화는 한국어 NLP에서 지양</span>** 되고 있습니다. 그 근본적인 이유는 **<span style="color:red">한국어</span>** 가 영어와는 다른 형태를 가지는 언어인 **<span style="color:red">교착어</span>** 라는 점에서 기인합니다. 한국어 토큰화가 어려운 점을 살펴보겠습니다.
+
+
+<br>
+
+
+
+
+## 1. 한국어는 띄어쓰기가 영어보다 잘 지켜지지 않는다. -> 띄어쓰기 보정 : PyKoSpacing
+
+**한국어는 영어권 언어와 비교하여 띄어쓰기가 어렵고 잘 지켜지지 않는 경향** 이 있습니다. 그 이유는 여러 견해가 있으나, 가장 기본적인 견해는 한국어의 경우 띄어쓰기가 지켜지지 않아도 글을 쉽게 이해할 수 있는 언어라는 점입니다. 대부분의 데이터에서 띄어쓰기가 잘 지켜지지 않는 경향이 있습니다.
+
+
+띄어쓰기를 전혀 하지 않은 한국어와 영어 두 가지 경우를 봅시다.
+
+- 제가이렇게띄어쓰기를전혀하지않고글을썼다고하더라도글을이해할수있습니다.
+- Tobeornottobethatisthequestion
+
+<br>
+
+
+영어의 경우에는 띄어쓰기를 하지 않으면 손쉽게 알아보기 어려운 문장들이 생깁니다. 이는 한국어(모아쓰기 방식)와 영어(풀어쓰기 방식)라는 언어적 특성의 차이에 기인 하므로, 결론적으로 한국어는 수많은 코퍼스에서 띄어쓰기가 무시되는 경우가 많아 자연어 처리가 어려워졌다는 것입니다. **<span style="color:red">결국 띄어쓰기를 보정해주어야 하는 전처리가 필요할 수도 있습니다.</span>**
+
+<br>
+
+**<span style="color:red">PyKoSpacing</span>** 은 띄어쓰기가 되어있지 않은 문장을 띄어쓰기를 한 문장으로 변환해주는 딥러닝 기반의 패키지입니다. **PyKoSpacing** 은 대용량 코퍼스를 학습하여 만들어진 띄어쓰기 딥 러닝 모델로 준수한 성능을 가지고 있습니다.
+
+<p align="center">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/3591ee1e-2783-40a9-8024-b7e516cb19d6">
+</p>
+
+<br>
+
+```
+pip install git+https://github.com/haven-jeon/PyKoSpacing.git
+```
+```py
+sent = '김철수는 극중 두 인격의 사나이 이광수 역을 맡았다. 철수는 한국 유일의 태권도 전승자를 가리는 결전의 날을 앞두고 10년간 함께 훈련한 사형인 유연재(김광수 분)를 찾으러 속세로 내려온 인물이다.'
+```
+
+<br>
+
+
+임의의 문장을 임의로 띄어쓰기가 없는 문장으로 만들고, 이를 **PyKoSpacing** 의 입력으로 사용하여 원 문장과 비교해보겠습니다.
+```py
+new_sent = sent.replace(" ", '') # 띄어쓰기가 없는 문장 임의로 만들기
+print(new_sent)
+```
+```
+[output]
+김철수는극중두인격의사나이이광수역을맡았다.철수는한국유일의태권도전승자를가리는결전의날을앞두고10년간함께훈련한사형인유연재(김광수분)를찾으러속세로내려온인물이다.
+```
+
+
+<br>
+
+
+```py
+from pykospacing import Spacing
+
+spacing = Spacing()
+kospacing_sent = spacing(new_sent) 
+
+print(sent)
+print(kospacing_sent)
+```
+```
+[output]
+김철수는 극중 두 인격의 사나이 이광수 역을 맡았다. 철수는 한국 유일의 태권도 전승자를 가리는 결전의 날을 앞두고 10년간 함께 훈련한 사형인 유연재(김광수 분)를 찾으러 속세로 내려온 인물이다.
+김철수는 극중 두 인격의 사나이 이광수 역을 맡았다. 철수는 한국 유일의 태권도 전승자를 가리는 결전의 날을 앞두고 10년간 함께 훈련한 사형인 유연재(김광수 분)를 찾으러 속세로 내려온 인물이다.
+```
+
+
+<br>
+
+
+
+
+## 2. 한국어는 주어 생략은 물론 어순도 중요하지 않다.
+
+같은 의미의 문장을 다음과 같이 자유롭게 쓸수있습니다.
+
+<p align="center">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/7cbbd3fa-f6a3-4fd6-b8e8-10eb747fd77e">
+</p>
+
+<br>
+
+3번의 경우 주어까지 생략했지만 의미를 알아차릴 수 있습니다. **<span style="color:red">즉, 다음 단어를 예측하는 Language Model에게는 매우 혼란스러운 상황입니다.</span>**
+
+<br>
+
+
+
+
+## 3. 한국어는 교착어이다.
+
+**<span style="color:red">교착어</span>** 란 **<u>실질적인 의미를 가지는 어간에 조사나, 어미와 같은 문법 형태소들이 결합하여 문법적인 기능이 부여되는 언어</u>** 를 말합니다. 가령, 한국어에는 영어에 없는 '은, 는, 이, 가, 를' 등과 같은 **<span style="background-color: #fff5b1">조사</span>** 가 존재합니다. 예를 들어 한국어에 '그(he/him)' 라는 주어나 목적어가 들어간 문장이 있다고 할 때 이 경우, '그' 라는 단어 하나에도 '그가', '그에게', '그를', '그와', '그는'과 같이 다양한 조사가 '그' 라는 글자 뒤에 띄어쓰기 없이 바로 붙게됩니다.
+
+<p align="center">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/522939bb-7249-4a14-a871-a0268e332034">
+</p>
+
+<br>
+
+
+이 예시문을 띄어쓰기 단위로 토큰화를 할 경우에는 '사과가', '사과에', '사과를', '사과' 가 전부 다른 단어로 간주됩니다. **<span style="color:red">즉, 같은 단어임에도 서로 다른 조사가 붙어서 다른 단어로 인식</span>** 이 되면 자연어 처리가 힘들고 번거로워지는 경우가 많으므로 **<span style="color:red">대부분의 한국어 NLP에서 조사는 분리해줄 필요가 있습니다.</span>**
+
+
+띄어쓰기 단위가 영어처럼 독립적인 단어라면 띄어쓰기 단위로 토큰화를 하면 되겠지만 **<u>한국어는 어절이 독립적인 단어로 구성되는 것이 아니라, 조사 등의 무언가가 붙어있는 경우가 많아서 이를 전부 분리해줘야 한다는 의미</u>** 입니다.
+
+<br>
+
+
+
+**한국어 토큰화** 에서는 **형태소(morpheme)** 란 개념을 반드시 이해해야 합니다. **<span style="color:red">형태소(morpheme)</span>** 란 **<u>뜻을 가진 가장 작은 말의 단위</u>** 를 말합니다. 형태소에는 두 가지 형태소가 있는데 **자립 형태소** 와 **의존 형태소** 입니다.
+
+- **자립 형태소**
+    - 접사, 어미, 조사와 상관없이 자립하여 사용할 수 있는 형태소. 그 자체로 단어가 된다.
+    - 체언(명사, 대명사, 수사), 수식언(관형사, 부사), 감탄사 등이 있다.
+- **의존 형태소**
+    - 다른 형태소와 결합하여 사용되는 형태소.
+    - 접사, 어미, 조사, 어간을 말한다.
+
+<br>
+
+
+예를 들어 다음과 같은 문장에 **띄어쓰기 단위 토큰화** 를 수행한다면 다음과 같은 결과를 얻습니다.
+
+- 문장 : 에디가 책을 읽었다
+- 결과 : ['에디가', '책을', '읽었다']
+
+<br>
+
+
+
+하지만 이를 **<span style="color:red">형태소 단위로 분해</span>** 하면 다음과 같습니다.
+
+- 자립 형태소 : 에디, 책
+- 의존 형태소 : -가, -을, 읽-, -었, -다
+
+<br>
+
+
+
+'에디'라는 사람 이름과 '책'이라는 명사를 얻어낼 수 있습니다. 이를 통해 유추할 수 있는 것은 **<span style="color:red">한국어</span>** 에서 영어에서의 단어 토큰화와 유사한 형태를 얻으려면 **<span style="color:red">어절 토큰화가 아니라 형태소 토큰화를 수행해야</span>** 한다는 것입니다. **<u>교착어인 한국어의 특성으로 인해 한국어는 토크나이저로 형태소 분석기를 사용하는 것이 보편적</u>** 입니다.
+
+<p align="center">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/9e558e92-5540-45bf-9ddf-4aa3a2e89b36">
+</p>
+
+<br>
+
+
+
+한국어 자연어 처리를 위해서는 **<span style="color:red">KoNLPy(코엔엘파이)</span>** 라는 파이썬 패키지를 사용할 수 있습니다. 코엔엘파이를 통해서 사용할 수 있는 한국어 형태소 분석기로 **Okt(Open Korea Text)**, **메캅(Mecab)**, **코모란(Komoran)**, **한나눔(Hannanum)**, **꼬꼬마(Kkma)**, **Khaii**, **Soynlp** 등이 있습니다. 다양한 형태소 분석기가 존재하므로 원하는 Task에 맞는 형태소 분석기를 선택하면됩니다.
+
+<p align="center">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/c21adff9-5110-4969-a3a7-bc35377ed4ab">
+</p>
+
+<br>
 
 
 
 
 
+# 한국어 Word Tokenization(KoNLPy)
+
+## 1. 띄어쓰기를 기준으로 하는 단어 토큰화(가급적 하지마세요)
 
 
+영어는 띄어쓰기 단위로 토큰화를 해도 단어들 간 구분이 꽤나 명확한 편이지만, 한국어의 경우에는 토큰화 작업이 훨씬 까다롭습니다. 그 이유는 **한국어는 조사, 접사 등으로 인해 단순 띄어쓰기 단위로 나누면 같은 단어가 다른 단어로 인식되는 경우가 너무 너무 많기 때문** 입니다. **<span style="color:red">한국어는 띄어쓰기로 토큰화하는 것은 명확한 실험 목적이 없다면 거의 쓰지 않는 것이 좋습니다.</span>** 예시를 통해서 이해해봅시다.
+```py
+kor_text = "사과의 놀라운 효능이라는 글을 봤어. 그래서 오늘 사과를 먹으려고 했는데 사과가 썩어서 슈퍼에 가서 사과랑 오렌지 사왔어"
+print(kor_text.split())
+```
+```
+[output]
+['사과의', '놀라운', '효능이라는', '글을', '봤어.', '그래서', '오늘', '사과를', '먹으려고', '했는데', '사과가', '썩어서', '슈퍼에', '가서', '사과랑', '오렌지', '사왔어']
+```
+
+
+<br>
+
+
+위의 예제에서는 '사과'란 단어가 총 4번 등장했는데 모두 '의', '를', '가', '랑' 등이 붙어있어 이를 제거해주지 않으면 기계는 전부 다른 단어로 인식하게 됩니다.
+```py
+print('사과' == '사과의')
+print('사과의' == '사과를')
+print('사과를' == '사과가')
+print('사과가' == '사과랑')
+```
+```
+[output]
+False
+False
+False
+False
+```
+
+
+<br>
+
+
+
+
+## 2. 형태소 분석기 KoNLPy 설치
+
+단어 토큰화를 위해서 영어에 **NLTK** 가 있다면 **한국어에는 형태소 분석기 패키지** 인 **<span style="color:red">KoNLPy(코엔엘파이)</span>** 가 존재합니다.
+```
+pip install konlpy
+```
+
+
+
+<br>
+
+
+**NLTK** 도 내부적으로 여러 토크나이저가 있던 것처럼 **KoNLPy** 또한 **다양한 형태소 분석기** 를 가지고 있습니다. 또한 **<span style="color:red">Mecab</span>** 이라는 형태소 분석기는 특이하게도 별도 설치를 해주어야 합니다.
+```
+# Colab에 Mecab 설치
+!pip install konlpy
+!pip install mecab-python
+!bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh)
+```
+
+
+<br>
+
+
+```py
+from konlpy.tag import *
+
+hannanum = Hannanum()
+kkma = Kkma()
+komoran = Komoran()
+okt = Okt()
+mecab = Mecab()
+```
+
+
+<br>
+
+위 형태소 분석기들은 공통적으로 아래의 함수를 제공합니다.
+
+- **nouns** : 명사 추출
+- **morphs** : 형태소 추출
+- **pos** : 품사 부착
+
+
+<br>
+
+
+
+## 3. KoNLPy - 형태소 분석기 Okt
+
+```py
+print('Okt 명사 추출 :', okt.nouns("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+print('Okt 형태소 분석 :', okt.morphs("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+print('Okt 품사 태깅 :', okt.pos("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+```
+```
+[output]
+Okt 명사 추출 : ['코딩', '당신', '연휴', '여행']
+Okt 형태소 분석 : ['열심히', '코딩', '한', '당신', ',', '연휴', '에는', '여행', '을', '가봐요']
+Okt 품사 태깅 : [('열심히', 'Adverb'), ('코딩', 'Noun'), ('한', 'Josa'), ('당신', 'Noun'), (',', 'Punctuation'), ('연휴', 'Noun'), ('에는', 'Josa'), ('여행', 'Noun'), ('을', 'Josa'), ('가봐요', 'Verb')]
+```
+
+
+<br>
+
+
+## 4. KoNLPy - 형태소 분석기 꼬꼬마
+
+```py
+print('kkma 명사 추출 :', kkma.nouns("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+print('kkma 형태소 분석 :', kkma.morphs("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+print('kkma 품사 태깅 :', kkma.pos("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+```
+```
+[output]
+kkma 명사 추출 : ['코딩', '당신', '연휴', '여행']
+kkma 형태소 분석 : ['열심히', '코딩', '하', 'ㄴ', '당신', ',', '연휴', '에', '는', '여행', '을', '가보', '아요']
+kkma 품사 태깅 : [('열심히', 'MAG'), ('코딩', 'NNG'), ('하', 'XSV'), ('ㄴ', 'ETD'), ('당신', 'NP'), (',', 'SP'), ('연휴', 'NNG'), ('에', 'JKM'), ('는', 'JX'), ('여행', 'NNG'), ('을', 'JKO'), ('가보', 'VV'), ('아요', 'EFN')]
+```
+
+
+<br>
+
+
+
+## 5. KoNLPy - 형태소 분석기 코모란
+
+```py
+print('komoran 명사 추출 :', komoran.nouns("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+print('komoran 형태소 분석 :', komoran.morphs("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+print('komoran 품사 태깅 :', komoran.pos("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+```
+```
+[output]
+komoran 명사 추출 : ['코', '당신', '연휴', '여행']
+komoran 형태소 분석 : ['열심히', '코', '딩', '하', 'ㄴ', '당신', ',', '연휴', '에', '는', '여행', '을', '가', '아', '보', '아요']
+komoran 품사 태깅 : [('열심히', 'MAG'), ('코', 'NNG'), ('딩', 'MAG'), ('하', 'XSV'), ('ㄴ', 'ETM'), ('당신', 'NNP'), (',', 'SP'), ('연휴', 'NNG'), ('에', 'JKB'), ('는', 'JX'), ('여행', 'NNG'), ('을', 'JKO'), ('가', 'VV'), ('아', 'EC'), ('보', 'VX'), ('아요', 'EC')]
+```
+
+
+<br>
+
+
+
+
+## 6. KoNLPy - 형태소 분석기 한나눔
+
+```py
+print('hannanum 명사 추출 :', hannanum.nouns("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+print('hannanum 형태소 분석 :', hannanum.morphs("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+print('hannanum 품사 태깅 :', hannanum.pos("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+```
+```
+[output]
+hannanum 명사 추출 : ['코딩', '당신', '연휴', '여행']
+hannanum 형태소 분석 : ['열심히', '코딩', '하', 'ㄴ', '당신', ',', '연휴', '에는', '여행', '을', '가', '아', '보', '아']
+hannanum 품사 태깅 : [('열심히', 'M'), ('코딩', 'N'), ('하', 'X'), ('ㄴ', 'E'), ('당신', 'N'), (',', 'S'), ('연휴', 'N'), ('에는', 'J'), ('여행', 'N'), ('을', 'J'), ('가', 'P'), ('아', 'E'), ('보', 'P'), ('아', 'E')]
+```
+
+
+<br>
+
+
+
+## 7. KoNLPy - 형태소 분석기 Mecab
+
+```py
+print('mecab 명사 추출 :', mecab.nouns("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+print('mecab 형태소 분석 :', mecab.morphs("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+print('mecab 품사 태깅 :', mecab.pos("열심히 코딩한 당신, 연휴에는 여행을 가봐요"))
+```
+```
+[output]
+mecab 명사 추출 : ['코딩', '당신', '연휴', '여행']
+mecab 형태소 분석 : ['열심히', '코딩', '한', '당신', ',', '연휴', '에', '는', '여행', '을', '가', '봐요']
+mecab 품사 태깅 : [('열심히', 'MAG'), ('코딩', 'NNG'), ('한', 'XSA+ETM'), ('당신', 'NP'), (',', 'SC'), ('연휴', 'NNG'), ('에', 'JKB'), ('는', 'JX'), ('여행', 'NNG'), ('을', 'JKO'), ('가', 'VV'), ('봐요', 'EC+VX+EC')]
+```
+
+
+<br>
+
+
+
+'못' 이라는 단어는 명사일때도있고, 부사일때도 있습니다.
+```py
+print('mecab 명사 추출 :', mecab.nouns("망치로 못을 두드리다."))
+print('mecab 명사 추출 :', mecab.nouns("나 그 일 못해요."))
+```
+```
+[output]
+mecab 명사 추출 : ['망치', '못']
+mecab 명사 추출 : ['나', '일']
+```
+
+
+<br>
+
+
+각 형태소 분석기는 성능과 결과가 다르게 나오기 때문에, **형태소 분석기의 선택은 사용하고자 하는 필요 용도에 어떤 형태소 분석기가 가장 적절한지를 판단하고 사용하면 됩니다.** 예를 들어서 속도를 중시한다면 메캅을 사용할 수 있습니다.
+
+
+
+<br>
+
+
+
+# 문장 토큰화(Sentence Tokenization)
+
+**<span style="color:red">토큰의 단위가 문장(sentence)</span>** 인 문장 단위로 토큰화할 필요가 있는 경우가 있습니다. 보통 갖고있는 코퍼스가 정제되지 않은 상태라면, 코퍼스는 문장 단위로 구분되어 있지 않아서 이를 사용하고자 하는 용도에 맞게 문장 토큰화가 필요할 수 있습니다.
+
+
+직관적으로 생각해봤을 때 **온점(.) 이나 '!' 나 '?' 로 구분하면 되지 않을까?** 란 **<span style="color:red">착각</span>** 을 할 수 있습니다.
+
+<p align="center">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/70797153-1ea0-433c-b7e0-f529663a8114">
+</p>
+
+<br>
+
+
+**<u>! 나 ? 는 문장의 구분을 위한 꽤 명확한 구분자(boundary) 역할을 하지만 마침표는 그렇지 않기 때문</u>** 입니다. 마침표는 문장의 끝이 아니더라도 등장할 수 있습니다.
+
+<p align="center">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/e165d05f-f265-4c4c-8acb-60f4c23fb3d2">
+</p>
+
+<p align="center">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/49d0cbb9-30eb-4521-be50-c5c9976a8cf9">
+</p>
+
+<br>
+
+
+
+**<span style="color:red">제대로 된 결과라면 Ph.D.는 분리되어서는 안되며, 문장 구분조차 보다 섬세한 규칙이 필요합니다.</span>**
+
+
+<br>
+
+
+
+# 영어 Sentence Tokenization(NLTK)
+
+우선 문자열이 주어졌을 떄, 문장 단위로 나눠보겠습니다. **문자열.split('자르는 기준')** 을 사용하면 해당 기준으로 문자열들을 분리하여 리스트 형태로 반환합니다. 아래의 코드는 온점을 기준으로 문자열을 자르는 코드입니다.
+```py
+temp = 'Yonsei University is a private research university in Seoul, South Korea. Yonsei University is deemed as one of the three most prestigious institutions in the country. It is particularly respected in the studies of medicine and business administration.'
+temp.split('. ')
+```
+```
+[output]
+['Yonsei University is a private research university in Seoul, South Korea',
+ 'Yonsei University is deemed as one of the three most prestigious institutions in the country',
+ 'It is particularly respected in the studies of medicine and business administration.']
+```
+
+
+<br>
+
+
+
+직관적으로 생각해봤을 때는 ?나 온점(.)이나 ! 기준으로 문장을 잘라내면 되지 않을까라고 생각할 수 있지만, 꼭 그렇지만은 않습니다. !나 ?는 문장의 구분을 위한 꽤 명확한 구분자(boundary) 역할을 하지만 온점은 꼭 그렇지 않기 때문입니다. **<span style="color:red">다시 말해, 온점은 문장의 끝이 아니더라도 등장할 수 있습니다. 온점을 기준으로 문장을 구분할 경우에는 예외사항이 너무 많습니다.</span>**
+
+
+
+**NLTK** 에서는 영어 문장의 토큰화를 수행하는 **sent_tokenize** 를 지원하고 있습니다.
+```py
+text = "His barber kept his word. But keeping such a huge secret to himself was driving him crazy. Finally, the barber went up a mountain and almost to the edge of a cliff. He dug a hole in the midst of some reeds. He looked about, to mae sure no one was near."
+from nltk.tokenize import sent_tokenize
+print(sent_tokenize(text))
+```
+```
+[output]
+['His barber kept his word.', 'But keeping such a huge secret to himself was driving him crazy.', 'Finally, the barber went up a mountain and almost to the edge of a cliff.', 'He dug a hole in the midst of some reeds.', 'He looked about, to mae sure no one was near.']
+```
+
+
+<br>
+
+```py
+text="I am actively looking for Ph.D. students. and you are a Ph.D student."
+print(sent_tokenize(text))
+```
+```
+[output]
+['I am actively looking for Ph.D. students.', 'and you are a Ph.D student.']
+```
+
+
+<br>
+
+
+
+
+
+# 한국어 Sentence Tokenization(KSS)
+
+
+한국어 문장 토크나이저 라이브러리로는 대표적으로 **KSS** 와 **kiwi** 가 있습니다.
+```
+pip install kss
+```
+```py
+import kss
+
+text = '딥 러닝 자연어 처리가 재미있기는 합니다. 그런데 문제는 영어보다 한국어로 할 때 너무 어려워요. 이제 해보면 알걸요?'
+print(kss.split_sentences(text))
+```
+```
+[output]
+['딥 러닝 자연어 처리가 재미있기는 합니다.', '그런데 문제는 영어보다 한국어로 할 때 너무 어려워요.', '이제 해보면 알걸요?']
+```
 
 
 
