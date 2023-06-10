@@ -232,7 +232,7 @@ print(get_decoded_sentences(encoded_sentences, index_to_word))
 
 
 <p align="center">
-<img alt="image" src="">
+<img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/ab094e70-e0d4-4bf4-bac6-149a6a88731e">
 </p>
 
 <br>
