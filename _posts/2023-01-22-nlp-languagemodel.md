@@ -5,6 +5,10 @@ category: NLP(Natural Language Processing)
 tag: NLP(Natural Language Processing)
 ---
 
+
+
+
+
 1. 언어 모델(Language Model)이란?
     - 1.1 전체 단어 시퀀스의 확률
     - 1.2 이전 단어들이 주어졌을 때 다음 단어의 등장 확률
@@ -124,7 +128,8 @@ $$
 
 <br>
 
-확률은 위와 같습니다. 예를 들어 기계가 학습한 코퍼스 데이터에서 **its water is so transparent that** 가 100번 등장했는데 그 다음에 **the** 가 등장한 경우는 30번이라고 합시다. 이 경우 $𝑃(the|its\ water\ is\ so\ transparent\ that)$ 는 30%입니다.
+확률은 위와 같습니다. 예를 들어 기계가 학습한 코퍼스 데이터에서 **its water is so transparent that** 가 100번 등장했는데 그 다음에 **the** 가 등장한 경우는 30번이라고 합시다. 이 경우
+$P(the|its\ water\ is\ so\ transparent\ that)$ 는 30%입니다.
 
 하지만 **<span style="background-color: #fff5b1">훈련 데이터가 정말 방대하지 않은 이상 제대로 카운트할 수 있는 경우가 거의 없습니다.</span>**
 
