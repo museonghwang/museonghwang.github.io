@@ -151,7 +151,7 @@ print(get_encoded_sentence('i eat lunch', word_to_index))
 
 **get_encoded_sentence** 함수를 통해 아래와 같이 매핑된 것이 확인할 수 있습니다.
 
-- **'<BOS>'** -> 1
+- **\<BOS\>** -> 1
 - **i** -> 3
 - **eat** -> 6
 - **lunch** -> 7
@@ -290,7 +290,7 @@ ValueError: Failed to convert a NumPy array to a Tensor (Unsupported object type
 <br>
 
 
-실행해 보니 에러가 발생합니다. 왜 그럴까요? 주의해야 할 점이 있는데, **<span style="color:red">Embedding 레이어의 input이 되는 문장 벡터는 그 길이가 일정 해야 합니다.</span>** **raw_inputs** 의 **3개 벡터의 길이** 는 각각 **4, 4, 5** 입니다. Tensorflow에서는 **tf.keras.preprocessing.sequence.pad_sequences** 라는 편리한 함수를 통해 문장 벡터 뒤에 **<span style="color:red">패딩('<PAD>')</span>** 을 추가하여 **<u>길이를 일정하게 맞춰주는 기능을 제공</u>** 합니다.
+실행해 보니 에러가 발생합니다. 왜 그럴까요? 주의해야 할 점이 있는데, **<span style="color:red">Embedding 레이어의 input이 되는 문장 벡터는 그 길이가 일정 해야 합니다.</span>** **raw_inputs** 의 **3개 벡터의 길이** 는 각각 **4, 4, 5** 입니다. Tensorflow에서는 **tf.keras.preprocessing.sequence.pad_sequences** 라는 편리한 함수를 통해 문장 벡터 뒤에 **<span style="color:red">패딩(\<PAD\>)</span>** 을 추가하여 **<u>길이를 일정하게 맞춰주는 기능을 제공</u>** 합니다.
 ```py
 raw_inputs = tf.keras.preprocessing.sequence.pad_sequences(
     raw_inputs,
