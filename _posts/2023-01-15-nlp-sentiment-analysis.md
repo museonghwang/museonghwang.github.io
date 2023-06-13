@@ -7,12 +7,19 @@ tag: NLP(Natural Language Processing)
 
 
 
-
-
 자연어 처리에 사용되는 기본 아키텍처인 **RNN(Recurrent Neural Network)** 과 컴퓨터 비전에서 주로 사용하는 **CNN(Convolutional Neural Network)** 구조를 학습하고 이를 활용하여 IMDB 영화 리뷰 평점 데이터를 토대로 영화리뷰에 대한 **<span style="color:red">감성분석(sentiment analysis)</span>** 를 진행해 보도록 하겠습니다.
 
-<br>
+1. 텍스트 데이터의 특징
+2. 텍스트 데이터의 특징 (1) 텍스트를 숫자로 표현하는 방법
+3. 텍스트 데이터의 특징 (2) Embedding 레이어의 등장
+4. 시퀀스 데이터를 다루는 RNN
+5. 1-D Convolution Neural Network
+6. IMDB 영화리뷰 감성분석 (1) IMDB 데이터셋 분석
+7. IMDB 영화리뷰 감성분석 (2) 딥러닝 모델 설계와 훈련
+8. IMDB 영화리뷰 감성분석 (3) Word2Vec의 적용
 
+<br>
+<br>
 
 
 
@@ -144,7 +151,7 @@ print(get_encoded_sentence('i eat lunch', word_to_index))
 
 **get_encoded_sentence** 함수를 통해 아래와 같이 매핑된 것이 확인할 수 있습니다.
 
-- **<BOS>** -> 1
+- **'<BOS>'** -> 1
 - **i** -> 3
 - **eat** -> 6
 - **lunch** -> 7
@@ -283,7 +290,7 @@ ValueError: Failed to convert a NumPy array to a Tensor (Unsupported object type
 <br>
 
 
-실행해 보니 에러가 발생합니다. 왜 그럴까요? 주의해야 할 점이 있는데, **<span style="color:red">Embedding 레이어의 input이 되는 문장 벡터는 그 길이가 일정 해야 합니다.</span>** **raw_inputs** 의 **3개 벡터의 길이** 는 각각 **4, 4, 5** 입니다. Tensorflow에서는 **tf.keras.preprocessing.sequence.pad_sequences** 라는 편리한 함수를 통해 문장 벡터 뒤에 **<span style="color:red">패딩(<PAD>)</span>** 을 추가하여 **<u>길이를 일정하게 맞춰주는 기능을 제공</u>** 합니다.
+실행해 보니 에러가 발생합니다. 왜 그럴까요? 주의해야 할 점이 있는데, **<span style="color:red">Embedding 레이어의 input이 되는 문장 벡터는 그 길이가 일정 해야 합니다.</span>** **raw_inputs** 의 **3개 벡터의 길이** 는 각각 **4, 4, 5** 입니다. Tensorflow에서는 **tf.keras.preprocessing.sequence.pad_sequences** 라는 편리한 함수를 통해 문장 벡터 뒤에 **<span style="color:red">패딩('<PAD>')</span>** 을 추가하여 **<u>길이를 일정하게 맞춰주는 기능을 제공</u>** 합니다.
 ```py
 raw_inputs = tf.keras.preprocessing.sequence.pad_sequences(
     raw_inputs,
@@ -703,7 +710,7 @@ print(x_train.shape)
 
 # 7. IMDB 영화리뷰 감성분석 (2) 딥러닝 모델 설계와 훈련
 
-**model** 훈련 전에, 훈련용 데이터셋 25000건 중 10000건을 분리하여 ***검증셋(validation set)** 으로 사용하도록 합니다. 적절한 validation 데이터는 몇 개가 좋을지 고민해 봅시다.
+**model** 훈련 전에, 훈련용 데이터셋 25000건 중 10000건을 분리하여 **검증셋(validation set)** 으로 사용하도록 합니다. 적절한 validation 데이터는 몇 개가 좋을지 고민해 봅시다.
 ```py
 # validation set 10000건 분리
 x_val = x_train[:10000]   
@@ -1022,7 +1029,7 @@ word_vectors.similar_by_word("love")
 ```py
 from gensim.models import KeyedVectors
 
-word2vec_path = '/root/share/aiffel-data/sentiment_classification/data/GoogleNews-vectors-negative300.bin.gz'
+word2vec_path = '/data/GoogleNews-vectors-negative300.bin.gz'
 word2vec = KeyedVectors.load_word2vec_format(word2vec_path, binary=True, limit=1000000)
 vector = word2vec['computer']
 vector     # 무려 300dim의 워드 벡터입니다.
