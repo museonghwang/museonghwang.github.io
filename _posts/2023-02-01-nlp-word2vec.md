@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 
+title: Word2Vec의 이해
 category: NLP(Natural Language Processing)
 tag: NLP(Natural Language Processing)
 ---
