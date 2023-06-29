@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 
+title: 네이버 영화 리뷰 데이터를 이용한 전처리(정규식, 토큰화, 정수 인코딩, 패딩)
 category: NLP(Natural Language Processing)
 tag: NLP(Natural Language Processing)
 ---
