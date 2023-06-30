@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 영어 및 한국어 Word2Vec 실습
+title: 영어 Word2Vec 실습
 category: NLP(Natural Language Processing)
 tag: NLP(Natural Language Processing)
 ---
@@ -10,14 +10,14 @@ tag: NLP(Natural Language Processing)
 
 1. gensim 패키지 버전확인
 2. 영어 Word2Vec 만들기
-- 2.1 Libaray Import
-- 2.2 훈련 데이터 이해
-- 2.3 훈련 데이터 전처리
-- 2.4 Word2Vec 훈련
-- 2.5 Word2Vec 모델 저장 및 로드
+    - 2.1 Libaray Import
+    - 2.2 훈련 데이터 이해
+    - 2.3 훈련 데이터 전처리
+    - 2.4 Word2Vec 훈련
+    - 2.5 Word2Vec 모델 저장 및 로드
 3. 영어 Word2Vec 임베딩 벡터의 시각화(Embedding Visualization)
-3.1 워드 임베딩 모델로부터 2개의 tsv 파일 생성하기
-3.2 임베딩 프로젝터를 사용하여 시각화하기
+    - 3.1 워드 임베딩 모델로부터 2개의 tsv 파일 생성하기
+    - 3.2 임베딩 프로젝터를 사용하여 시각화하기
 4. 사전 훈련된 Word2Vec 임베딩(Pre-trained Word2Vec embedding) 소개
 
 
