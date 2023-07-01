@@ -281,8 +281,6 @@ CBOW와 Skip-gram 각각에 대해서 예측하는 단어마다 몇 번의 서�
 
 | Input | Output |
 | :----: | :----: |
-| fat, cat | The |
-
 | The | fat, cat |
 | fat | The, cat, sat |
 | cat | The, fat, sat, on |
