@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Word2Vec - CBOW의 이해
+title: Word2Vec 학습방식 - CBOW와 Skip-gram의 이해
 category: NLP(Natural Language Processing)
 tag: NLP(Natural Language Processing)
 ---
