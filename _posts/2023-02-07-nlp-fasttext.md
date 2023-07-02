@@ -26,7 +26,7 @@ tag: NLP(Natural Language Processing)
     - 6.3 훈련 데이터 이해
     - 6.4 훈련 데이터 전처리
     - 6.5 Word2Vec 훈련
-
+7. FastText Summaray
 
 <br>
 
