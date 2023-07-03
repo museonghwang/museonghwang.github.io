@@ -1,6 +1,6 @@
 ---
 layout: post
-title: FastText의 이해
+title: FastText의 이해와 Word2Vec과의 비교
 category: NLP(Natural Language Processing)
 tag: NLP(Natural Language Processing)
 ---
