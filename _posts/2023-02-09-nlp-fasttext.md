@@ -75,7 +75,7 @@ tag: NLP(Natural Language Processing)
 <br>
 
 
-# 2.1 OOV(Out-of-Vocabulary) 문제
+## 2.1 OOV(Out-of-Vocabulary) 문제
 
 <p align="center">
 <img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/1fce8892-3b10-46de-af2d-cb669828d7fc">
@@ -90,7 +90,7 @@ tag: NLP(Natural Language Processing)
 <br>
 
 
-# 2.2 형태학적 특징을 반영할 수 없는 문제
+## 2.2 형태학적 특징을 반영할 수 없는 문제
 
 <p align="center">
 <img alt="image" src="https://github.com/museonghwang/museonghwang.github.io/assets/77891754/4954395b-66e4-4b1d-9a26-12fad5d1701e">
